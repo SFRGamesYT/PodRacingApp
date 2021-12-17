@@ -1,97 +1,85 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package sfr.college.PodRacing;
 
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Toolkit;
-
-import java.awt.image.BufferStrategy;
-import static java.lang.Math.signum;
 import sfr.college.PodRacing.Display.Screen;
-import sfr.college.PodRacing.States.*;
+import sfr.college.PodRacing.States.StateManager;
+
+import java.awt.*;
+import java.awt.image.BufferStrategy;
+
+import static java.lang.Math.signum;
 
 
 /**
- * 
  * @author Sami
  */
 //main class to handle game
-public class Game implements Runnable{
-    
-    
-    
-    private final Screen screen;
-    private Thread thread;
-    private String title;
-    
-    private Handler handler;
-    private final KeyManager km;
-    private final MouseManager mm;
+public class Game implements Runnable {
 
-    private int time; //starts at 0, increments each frame
-    
+
+    public static final Color SAND = new Color(255, 178, 127);
+    public static final Color BLUE0 = new Color(124, 211, 255);
+    public static final Color BLUE1 = new Color(0, 169, 255);
+    public static final Color BLUE2 = new Color(0, 96, 145);
     private static final Dimension window = Toolkit.getDefaultToolkit().getScreenSize();
     public static final int WIN_SIZE = getAppropriateDimensions(window);
-    public static final int WIN_SIZE_HALF = (int)WIN_SIZE/2;
-    public static final int WIN_SIZE_QUARTER = (int)WIN_SIZE_HALF/2;
-    public static final int WIN_SIZE_8TH = (int)WIN_SIZE_QUARTER/2;
-    public static final Color SAND = new Color(255,178,127);
-    public static final Color BLUE0 = new Color(124,211,255);
-    public static final Color BLUE1 = new Color(0,169,255);
-    public static final Color BLUE2 = new Color(0,96,145);
-    boolean running = false;
-    
-    private BufferStrategy bs;
-    private Graphics g;
+    public static final int WIN_SIZE_HALF = WIN_SIZE / 2;
+    public static final int WIN_SIZE_QUARTER = WIN_SIZE_HALF / 2;
+    public static final int WIN_SIZE_8TH = WIN_SIZE_QUARTER / 2;
+    private final Screen screen;
+    private final KeyManager km;
+    private final MouseManager mm;
+    private final boolean hasSound;
     public StateManager sm;
-    private boolean hasSound;
+    boolean running = false;
+    private Thread thread;
+    private Handler handler;
+    private int time; //starts at 0, increments each frame
 
-    /*
-    public static void wait(int ms){
-        try{
-            Thread.sleep(ms);
-        }
-        catch(InterruptedException ex){
-            Thread.currentThread().interrupt();
-        }
-    }
-    */
-    public static int getAppropriateDimensions(Dimension dimension){
-		int x = 0;
-		int alpha;
-		int width = (int)dimension.getWidth();
-		int height =(int)dimension.getHeight();
-		alpha = width-height;
-		if(signum(alpha)==1){
-			x = height;
-		}else{
-			x = width;
-		}
-
-
-		return (int) (0.87f*x);
-
-    }
-    
-    public static int scaleToWindow(float percent){
-        return (int) (percent * WIN_SIZE);
-    }
-    
-    
-    public Game(String title,boolean hasSound){
+	/**Game
+	 * Class to handler main game loop
+	 * 
+	 * @param title title for game window
+	 * @param hasSound use sound assets or not
+	 */
+    public Game(String title, boolean hasSound) {
         time = 0;
-        this.screen = new Screen(WIN_SIZE,title);
+        this.screen = new Screen(WIN_SIZE, title);
         km = new KeyManager();
         mm = new MouseManager();
         this.hasSound = hasSound;
     }
-    
-    private void init(){
+
+	/**getAppropriateDimensions
+	 * Returns the private variable appropriateDimensions value
+	 * @return the value of the private variable appropriateDimensions
+	 */
+    public static int getAppropriateDimensions(Dimension dimension) {
+        int alpha;
+        int width = (int) dimension.getWidth();
+        int height = (int) dimension.getHeight();
+        alpha = width - height;
+        if (signum(alpha) == 1) {
+            return (int) (height * 0.9f);
+        } else {
+            return (int) (width * 0.8f);
+        }
+    }
+
+	/**scaleToWindow
+	 * takes a float value between 0.0-1.0 and converts it to an integer value relating to the percentage on the players screen
+	 * 
+	 * @param percent percentage relative to screen
+     */
+    public static int scaleToWindow(float percent) {
+        return (int) (percent * WIN_SIZE);
+    }
+
+	/**init
+	 * initializes any other variables
+	 * 
+	 */
+    private void init() {
         handler = new Handler(this);
         handler.hasSound = hasSound;
         Assets.init(handler);
@@ -106,19 +94,32 @@ public class Game implements Runnable{
 
         sm = new StateManager(handler);
 
-       
+
     }
 
+	/**getKeyManager
+	 * Returns the private variable keyManager's value
+	 * @return the value of the private variable keyManager
+	 */
     public KeyManager getKeyManager() {
         return km;
     }
-    public MouseManager getMouseManager(){
+
+	/**getMouseManager
+	 * Returns the private variable mouseManager's value
+	 * @return the value of the private variable mouseManager
+	 */
+    public MouseManager getMouseManager() {
         return mm;
     }
-    
-    private void tick(){
+
+	/**tick
+	 * updates all values and variables
+	 * 
+	 */
+    private void tick() {
         time++;
-        
+
         sm.tick();
         sm.getState().tick();
         km.tick();
@@ -126,29 +127,36 @@ public class Game implements Runnable{
 
     }
 
+	/**getTime
+	 * Returns the private variable time's value
+	 * @return the value of the private variable time
+	 */
     public int getTime() {
         return time;
     }
-    
-    
-    
-    private void render(){
-        bs = screen.getCanvas().getBufferStrategy();
-	if(bs == null){
+
+
+	/**render
+	 * where objects are rendered to the screen
+	 * 
+	 */
+    private void render() {
+        BufferStrategy bs = screen.getCanvas().getBufferStrategy();
+        if (bs == null) {
             screen.getCanvas().createBufferStrategy(3);
-            bs = screen.getCanvas().getBufferStrategy();
             return;
-	}
-	g = bs.getDrawGraphics();
-	//Clear Screen
-	g.clearRect(0, 0, WIN_SIZE,WIN_SIZE);
-	//Draw Here!
+        }
+        Graphics g = bs.getDrawGraphics();
+        //Clear Screen
+        g.clearRect(0, 0, WIN_SIZE, WIN_SIZE);
+        //Draw Here!
         sm.getState().render(g);
 
         bs.show();
         g.dispose();
     }
-    
+
+    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     public void run() {
         init();
         final int FPS = 60;
@@ -158,47 +166,52 @@ public class Game implements Runnable{
         long lastTime = System.nanoTime();
         long timer = 0;
         int ticks = 0;
-        
-        while(running){
+
+        while (running) {
             //calculate delta time
             now = System.nanoTime();
             delta += (now - lastTime) / timePerFrame;
             timer += now - lastTime;
             lastTime = now;
-            
-            if(delta >= 1){
-		tick();
-		render();
-		ticks++;
-		delta--;
+
+            if (delta >= 1) {
+                tick();
+                render();
+                ticks++;
+                delta--;
             }
-            if(timer>=1000000000){
-                if(handler.getKeyManager().f)System.out.println("FPS: "+ticks);
+            if (timer >= 1000000000) {
+                if (handler.getKeyManager().f) System.out.println("FPS: " + ticks);
                 ticks = 0;
                 timer = 0;
             }
-                    
+
         }
         stop();
-        
-        
-        
+
+
     }
-    
-    public synchronized void stop(){
-        if(!running){
+
+	/**stop the games thread
+	 * 
+	 */
+    public synchronized void stop() {
+        if (!running) {
             return;
         }
-        running=false;
+        running = false;
         try {
             thread.join();
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
-    
-    public synchronized void start(){
-        if(running){
+
+	/**start the game
+	 * 
+	 */
+    public synchronized void start() {
+        if (running) {
             return;
         }
         running = true;

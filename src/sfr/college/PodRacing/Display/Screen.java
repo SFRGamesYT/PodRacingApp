@@ -1,13 +1,13 @@
 package sfr.college.PodRacing.Display;
-import java.awt.Canvas;
-import java.awt.Dimension;
 
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+
 public class Screen {
-	private JFrame frame;
-	private Canvas canvas;
-	private String title;
-	private int length;
+    private JFrame frame;
+    private Canvas canvas;
+    private final String title;
+    private final int length;
 
 	
 	public Screen(int l, String title){

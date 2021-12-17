@@ -5,17 +5,18 @@
  */
 package sfr.college.PodRacing.Entities;
 
-import java.awt.Graphics;
 import sfr.college.PodRacing.Handler;
 
+import java.awt.*;
+
 /**
- *
  * @author SR35477
  */
 public abstract class Entity {
-    protected float x,y;
+    protected float x, y;
     protected Handler handler;
-    
+
     public abstract void render(Graphics g);
+
     public abstract void tick();
 }

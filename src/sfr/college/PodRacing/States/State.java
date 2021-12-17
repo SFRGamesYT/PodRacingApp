@@ -5,36 +5,36 @@
  */
 package sfr.college.PodRacing.States;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import sfr.college.PodRacing.Game;
-import static sfr.college.PodRacing.Game.WIN_SIZE;
 import sfr.college.PodRacing.Handler;
-;
+
+import java.awt.*;
+
+import static sfr.college.PodRacing.Game.WIN_SIZE;
 
 /**
- *
  * @author SR35477
  */
 public class State {
-    protected Handler handler;
     public boolean exitable = false;
     public boolean forward = false;
     public boolean back = false;
+    protected Handler handler;
     protected long first;
 
-    public void render(Graphics g){
-        
-    }
-    
-    public void tick(){
-        
-    }
-    public State(Handler handler){
+    public State(Handler handler) {
         this.handler = handler;
     }
-    protected static void fillScreenColor(Graphics g,Color color){
+
+    protected static void fillScreenColor(Graphics g, Color color) {
         g.setColor(color);
         g.fillRect(0, 0, WIN_SIZE, WIN_SIZE);
+    }
+
+    public void render(Graphics g) {
+
+    }
+
+    public void tick() {
+
     }
 }

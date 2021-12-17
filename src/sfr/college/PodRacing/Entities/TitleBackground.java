@@ -4,28 +4,29 @@
  */
 package sfr.college.PodRacing.Entities;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import static sfr.college.PodRacing.Game.WIN_SIZE;
-import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.Assets;
+import sfr.college.PodRacing.Handler;
+
+import java.awt.*;
+
+import static sfr.college.PodRacing.Game.WIN_SIZE;
 
 /**
- *
  * @author Sami
  */
 public class TitleBackground extends ImageEntity {
     private int alpha = 255;
-    private boolean animated;
+    private final boolean animated;
 
-    public TitleBackground(Handler handler,boolean anim) {
-        super(handler,Assets.titleBg, 1f, 0.5f, 0.5f);
+    public TitleBackground(Handler handler, boolean anim) {
+        super(handler, Assets.titleBg, 1f, 0.5f, 0.5f);
         this.animated = anim;
     }
+
     @Override
     public void render(Graphics g) {
         super.render(g);
-        g.setColor(new Color(0,0,0,alpha));
+        g.setColor(new Color(0, 0, 0, alpha));
         g.fillRect(0, 0, WIN_SIZE, WIN_SIZE);
     }
 
@@ -33,18 +34,19 @@ public class TitleBackground extends ImageEntity {
     public void tick() {
         int time = handler.getTime();
         super.tick();
-        if(animated){
-            if(time%5==0&&!isDone()){
+        if (animated) {
+            if (time % 5 == 0 && !isDone()) {
                 alpha--;
             }
-            if(handler.getKeyManager().keyPressed){
+            if (handler.getKeyManager().keyPressed) {
                 skipAnim();
             }
-        }else{
+        } else {
             skipAnim();
         }
     }
-    public Boolean isDone(){
+
+    public Boolean isDone() {
         return alpha <= 70;
     }
 
@@ -55,8 +57,9 @@ public class TitleBackground extends ImageEntity {
     public void setAlpha(int alpha) {
         this.alpha = alpha;
     }
-    public void skipAnim(){
+
+    public void skipAnim() {
         alpha = 70;
     }
-    
+
 }

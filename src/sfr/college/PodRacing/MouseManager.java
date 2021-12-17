@@ -10,29 +10,28 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- *
  * @author sr35477
  */
 public class MouseManager implements MouseListener, MouseMotionListener {
-    public boolean leftPressed,rightPressed;
-    public int mX,mY; // location of mouse
+    public boolean leftPressed, rightPressed;
+    public int mX, mY; // location of mouse
 
     public MouseManager() {
     }
-    
+
     @Override
     public void mouseMoved(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
     }
-    
+
     @Override
     public void mousePressed(MouseEvent e) {
-        if(e.getButton() == MouseEvent.BUTTON1){
+        if (e.getButton() == MouseEvent.BUTTON1) {
             leftPressed = true;
             mX = e.getX();
             mY = e.getY();
-        }else if(e.getButton() == MouseEvent.BUTTON3){
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
             rightPressed = true;
             mX = e.getX();
             mY = e.getY();
@@ -41,14 +40,14 @@ public class MouseManager implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-         if(e.getButton() == MouseEvent.BUTTON1){
+        if (e.getButton() == MouseEvent.BUTTON1) {
             leftPressed = false;
-             mX = e.getX();
-             mY = e.getY();
-        }else if(e.getButton() == MouseEvent.BUTTON3){
+            mX = e.getX();
+            mY = e.getY();
+        } else if (e.getButton() == MouseEvent.BUTTON3) {
             rightPressed = false;
-             mX = e.getX();
-             mY = e.getY();
+            mX = e.getX();
+            mY = e.getY();
         }
     }
 
@@ -65,9 +64,10 @@ public class MouseManager implements MouseListener, MouseMotionListener {
         mX = e.getX();
         mY = e.getY();
     }
+
     @Override
     public void mouseClicked(MouseEvent e) {
     }
-    
-    
+
+
 }

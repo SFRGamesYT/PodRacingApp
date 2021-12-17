@@ -6,11 +6,9 @@ package sfr.college.PodRacing.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
 import java.util.List;
 
 /**
- *
  * @author Sami
  */
 public class TreeNode<T> implements Iterable<TreeNode<T>> {
@@ -18,6 +16,11 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
     private T data;
     private TreeNode<T> parent;
     private List<TreeNode<T>> children;
+
+    public TreeNode(T data) {
+        this.data = data;
+        this.children = new ArrayList<TreeNode<T>>();
+    }
 
     public TreeNode<T> getParent() {
         return parent;
@@ -35,11 +38,6 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         this.children = children;
     }
 
-    public TreeNode(T data) {
-        this.data = data;
-        this.children = new ArrayList<TreeNode<T>>();
-    }
-
     public TreeNode<T> addChild(T child) {
         TreeNode<T> childNode = new TreeNode<T>(child);
         childNode.parent = this;
@@ -47,11 +45,12 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
         return childNode;
     }
 
-    public T getData(){
+    public T getData() {
         return data;
     }
-    public TreeNode<T> getChild(int index){
-        if(index>=this.children.size()) return null;
+
+    public TreeNode<T> getChild(int index) {
+        if (index >= this.children.size()) return null;
         return this.children.get(index);
     }
 
@@ -59,10 +58,12 @@ public class TreeNode<T> implements Iterable<TreeNode<T>> {
     public Iterator<TreeNode<T>> iterator() {
         return null;
     }
-    public void kill(){
-        this.data=null;
+
+    public void kill() {
+        this.data = null;
     }
-    public TreeNode getNode(T data){
+
+    public TreeNode getNode(T data) {
         if (this.data.equals(data)) return this;
         return null;
     }
