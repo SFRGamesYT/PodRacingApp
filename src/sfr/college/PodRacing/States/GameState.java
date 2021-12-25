@@ -8,26 +8,23 @@ package sfr.college.PodRacing.States;
 import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Entities.Button;
 import sfr.college.PodRacing.Entities.*;
+import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
+import sfr.college.PodRacing.util.MathUtils;
 
 import java.awt.*;
-
-import static sfr.college.PodRacing.Game.WIN_SIZE;
-import static sfr.college.PodRacing.Game.WIN_SIZE_HALF;
 
 /**
  * @author SR35477
  */
 public class GameState extends State {
-    private final float DEFAULT_FOV = 1.5f;
+    private final float DEFAULT_FOV = 10f;
     String podSelected;
     Button pauseButton;
     GameBackground bg;
     Vehicle vehicleSelected;
     MiniMap miniMap;
     boolean devMode;
-    private int mapX;
-    private int mapY;
     private final float fov;//Field Of View
 
     public GameState(Handler handler, String podSelected) {
@@ -44,20 +41,25 @@ public class GameState extends State {
         fov = DEFAULT_FOV;
         bg = new GameBackground(handler, 1, 0.5f, 0.5f, fov);
         miniMap = new MiniMap(handler);
-        mapX = (int) ((WIN_SIZE) - (vehicleSelected.getCamX() + WIN_SIZE_HALF));
-        mapY = (int) ((WIN_SIZE) - (vehicleSelected.getCamY() + WIN_SIZE_HALF));
+
+
 
 
     }
 
     @Override
     public void render(Graphics g) {
-        bg.render(g, vehicleSelected);
+        bg.render(g);
         pauseButton.render(g);
         vehicleSelected.render(g);
         miniMap.render(g);
-        g.setColor(Color.CYAN);
-        if (handler.devMode) {
+        g.setColor(Color.blue);
+        if (handler.devMode||true) {
+            g.drawString("speed: "+ MathUtils.round(vehicleSelected.getHitBox().getVelocity().getLength(),2), Game.scaleToWindow(0.75),Game.scaleToWindow(0.3f));
+            g.drawString("pos"+vehicleSelected.getHitBox().getPosCentre().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.4f));
+            g.drawString("velocity"+vehicleSelected.getHitBox().getVelocity().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.2f));
+            g.drawString("ElapsedFrames: "+String.valueOf(vehicleSelected.getHitBox().getElapsedFrames()), Game.scaleToWindow(0.75),Game.scaleToWindow(0.9f));
+            g.drawString("direction"+vehicleSelected.getDirection().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.5f));
 
         }
 
@@ -74,21 +76,12 @@ public class GameState extends State {
         miniMap.tick();
 
         devMode = handler.getKeyManager().f;
-        mapX = (int) ((WIN_SIZE) - (vehicleSelected.getCamX() + WIN_SIZE_HALF));
-        mapY = (int) ((WIN_SIZE) - (vehicleSelected.getCamY() + WIN_SIZE_HALF));
+
 
     }
 
     public GameState getGameState() {
         return this;
-    }
-
-    public int getMapX() {
-        return mapX;
-    }
-
-    public int getMapY() {
-        return mapY;
     }
 
     public float getFov() {

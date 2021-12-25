@@ -49,14 +49,7 @@ public class MapCollisionHulls extends Entity {
 
             };
 
-    public static boolean isColliidingWith(Rectangle rec) {
-        for (int i = 0; i < hitBoxes.length; i++) {
-            if (rec.intersects(hitBoxes[i])) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void render(Graphics g) {

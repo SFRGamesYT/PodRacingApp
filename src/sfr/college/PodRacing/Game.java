@@ -23,6 +23,7 @@ public class Game implements Runnable {
     public static final Color BLUE2 = new Color(0, 96, 145);
     private static final Dimension window = Toolkit.getDefaultToolkit().getScreenSize();
     public static final int WIN_SIZE = getAppropriateDimensions(window);
+    public static final double mapScale = WIN_SIZE/256d;
     public static final int WIN_SIZE_HALF = WIN_SIZE / 2;
     public static final int WIN_SIZE_QUARTER = WIN_SIZE_HALF / 2;
     public static final int WIN_SIZE_8TH = WIN_SIZE_QUARTER / 2;
@@ -68,10 +69,10 @@ public class Game implements Runnable {
 
 	/**scaleToWindow
 	 * takes a float value between 0.0-1.0 and converts it to an integer value relating to the percentage on the players screen
-	 * 
-	 * @param percent percentage relative to screen
+	 *
+     * @param percent percentage relative to screen
      */
-    public static int scaleToWindow(float percent) {
+    public static int scaleToWindow(double percent) {
         return (int) (percent * WIN_SIZE);
     }
 

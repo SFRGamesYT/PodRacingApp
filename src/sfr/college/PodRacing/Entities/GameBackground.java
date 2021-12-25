@@ -5,41 +5,39 @@
 package sfr.college.PodRacing.Entities;
 
 import sfr.college.PodRacing.Assets;
+import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.gfx.Animation;
-import sfr.college.PodRacing.util.RenderUtil;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static sfr.college.PodRacing.Game.*;
+import static sfr.college.PodRacing.Game.WIN_SIZE;
 
 
 /**
  * @author Sami
  */
 public class GameBackground extends AnimImageEntity {
-    protected final int now = handler.getTime();
+
     protected float fov;
-    protected MapCollisionHulls hulls;
-    private int t;
+
+
 
     public GameBackground(Handler handler, float s, float x, float y, float fov) {
         super(handler, new Animation(300, Assets.bg), s, x, y);
         this.fov = fov;
-        hulls = new MapCollisionHulls();
-        t = 0;
     }
 
     public void tick() {
 
         super.tick();
-        if (fov <= 10) t = 0 + handler.getTime() - now;
-        fov = (float) Math.pow(1.01f, 2 * t);
+
+
     }
 
-    public void render(Graphics g, Vehicle v) {
-
+    public void render(Graphics g) {
+        Vehicle v = handler.getCurrentVehicle();
         Graphics2D g2d = (Graphics2D) g;
         double width = WIN_SIZE;
         double height = WIN_SIZE;
@@ -51,10 +49,10 @@ public class GameBackground extends AnimImageEntity {
         double anchory = (height - zoomHeight) / 2;
         AffineTransform OLDat = new AffineTransform();
         AffineTransform at = new AffineTransform();
-        at.rotate(v.getDirection(), WIN_SIZE_HALF, scaleToWindow(0.8f));
+        //at.rotate(2*Math.PI-v.getAngle(), WIN_SIZE_HALF,WIN_SIZE_HALF);
         at.translate(anchorx, anchory);
         at.scale(fov, fov);
-        at.translate(v.getCamX(), v.getCamY());
+       // at.translate(-WIN_SIZE*(v.getHitBox().getPosCentre().x/256.0d)+WIN_SIZE_HALF, -WIN_SIZE*(v.getHitBox().getPosCentre().y/256.0d)+WIN_SIZE_HALF);
 
         g2d.setTransform(at);
 
@@ -66,15 +64,16 @@ public class GameBackground extends AnimImageEntity {
             while (true) {
                 try {
                     g.setColor(Color.MAGENTA);
-                    RenderUtil.fillRect(g, MapCollisionHulls.hitBoxes[count]);
+                    MapCollisionHulls.hitBoxes[count].getScaled().render(g);
 
-                    if (MapCollisionHulls.isColliidingWith(handler.getCollisionHull())) {
+                    if (v.getHitBox().RectVsRect(MapCollisionHulls.hitBoxes[count])){
                         g.setColor(Color.red);
                     } else {
                         g.setColor(Color.yellow);
                     }
 
-                    RenderUtil.fillRect(g, handler.getCollisionHull());
+                    v.getHitBox().getScaled().render(g);
+                    g.drawLine((int)v.getHitBox().getScaled().getPosCentre().x,(int)v.getHitBox().getScaled().getPosCentre().y,(int)v.getHitBox().getScaled().getPosCentre().getAdded(v.getDirection().getMultiplied(Game.scaleToWindow(0.1f))).x,(int)v.getHitBox().getScaled().getPosCentre().getAdded(v.getDirection().getMultiplied(Game.scaleToWindow(0.1f)*-1)).y);
                 } catch (java.lang.ArrayIndexOutOfBoundsException e) {
                     break;
                 }

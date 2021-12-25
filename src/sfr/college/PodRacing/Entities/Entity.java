@@ -13,7 +13,8 @@ import java.awt.*;
  * @author SR35477
  */
 public abstract class Entity {
-    protected float x, y;
+
+
     protected Handler handler;
 
     public abstract void render(Graphics g);

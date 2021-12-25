@@ -20,7 +20,7 @@ public class StateExitable extends State {
 
     public StateExitable(Handler handler) {
         super(handler);
-        backButton = new Button(handler, Assets.backbutton, 0.2f, 0.88f, 0.9f, false);
+        backButton = new Button(handler, Assets.backbutton, 0.2f, 0.85f, 0.9f, false);
         exitable = true;
         back = false;
         forward = false;

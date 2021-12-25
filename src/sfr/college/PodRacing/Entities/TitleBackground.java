@@ -19,7 +19,7 @@ public class TitleBackground extends ImageEntity {
     private final boolean animated;
 
     public TitleBackground(Handler handler, boolean anim) {
-        super(handler, Assets.titleBg, 1f, 0.5f, 0.5f);
+        super(handler, Assets.titleBg, 1, 0.5f, 0.5f);
         this.animated = anim;
     }
 
@@ -47,7 +47,7 @@ public class TitleBackground extends ImageEntity {
     }
 
     public Boolean isDone() {
-        return alpha <= 70;
+        return alpha <= 72;
     }
 
     public int getAlpha() {
@@ -59,7 +59,7 @@ public class TitleBackground extends ImageEntity {
     }
 
     public void skipAnim() {
-        alpha = 70;
+        alpha = 72;
     }
 
 }

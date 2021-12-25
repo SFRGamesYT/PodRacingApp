@@ -5,7 +5,8 @@
  */
 package sfr.college.PodRacing.util;
 
-import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @author sr35477
@@ -41,6 +42,14 @@ public class MathUtils {
             return 0f;
         }
     }
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
 
     public static boolean parseBoolean(String text) {
         return Boolean.parseBoolean(text);
@@ -51,12 +60,7 @@ public class MathUtils {
         return (float) Math.sqrt(x);
     }
 
-    public static boolean pointVsRect(Point p, Rectangle rect) {
-        return (p.x >= rect.x && p.y >= rect.y && p.x < rect.x + rect.width && p.y < rect.y + rect.height);
-    }
 
-    public boolean rectVsRect(Rectangle r1, Rectangle r2) {
-        return (r1.x < r2.x + r2.width && r1.x + r1.width > r2.x && r1.y < r2.y + r2.height && r1.y + r1.height > r2.y);
-    }
+
 
 }

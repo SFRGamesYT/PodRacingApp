@@ -32,12 +32,10 @@ public class Button extends ImageEntity {
 
     }
 
-    protected boolean isOnButton(int x, int y) {
-        return boundsOnScreen.contains(x, y);
-    }
+
 
     public boolean isMouseOnButton() {
-        return isOnButton(handler.getMouseManager().mX, handler.getMouseManager().mY);
+        return boundsOnScreen.PointVsRect(handler.getMouseManager().mousePos);
     }
 
     public void flash() {

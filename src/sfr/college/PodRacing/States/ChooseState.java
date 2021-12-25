@@ -42,12 +42,12 @@ public class ChooseState extends StateExitable {
         chooseVehicleText = new CoolBlueText(handler, "CHOOSE VEHICLE", 0.05f, 0.1f);
 
 
-        pod0 = new ChoosePodButton(handler, Assets.pod0button, 0.25f, 0.2f, 0.4f, "Anakin's Podracer");
-        pod1 = new ChoosePodButton(handler, Assets.pod1button, 0.25f, 0.4f, 0.4f, "Sebulba's Podracer");
-        pod2 = new ChoosePodButton(handler, Assets.pod2button, 0.25f, 0.6f, 0.4f, "Gasgano's Ord Pedrovia");
+        pod0 = new ChoosePodButton(handler, Assets.pod0button, 0.20f, 0.2f, 0.4f, "Anakin's Podracer");
+        pod1 = new ChoosePodButton(handler, Assets.pod1button, 0.20f, 0.4f, 0.4f, "Sebulba's Podracer");
+        pod2 = new ChoosePodButton(handler, Assets.pod2button, 0.20f, 0.6f, 0.4f, "Gasgano's Ord Pedrovia");
 
 
-        playButton = new Button(handler, Assets.playbutton, 0.2f, 0.88f, 0.4f, false);
+        playButton = new Button(handler, Assets.playbutton, 0.2f, 0.85f, 0.4f, false);
         podSelected = "";
         podButtons = new ArrayList<>();
 

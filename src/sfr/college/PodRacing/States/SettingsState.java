@@ -55,7 +55,7 @@ public class SettingsState extends StateExitable {
         musicVolume = Assets.settings.getFloat("musicVolume", 1.0f);
         soundSlider = new UISlider(handler, 0.3f, 0.1f, 0.3f, soundVolume);
         musicSlider = new UISlider(handler, 0.3f, 0.1f, 0.45f, musicVolume);
-        applyButton = new Button(handler, Assets.applyButton, 0.2f, 0.88f, 0.77f, false);
+        applyButton = new Button(handler, Assets.applyButton, 0.2f, 0.85f, 0.75f, false);
         fxBox = new CheckBox(handler, 0.03f, 0.48f, 0.542f);
         fxBox.setOn(Assets.settings.getBoolean("muteSound", false));
         musicBox = new CheckBox(handler, 0.03f, 0.32f, 0.592f);

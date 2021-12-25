@@ -20,10 +20,6 @@ public class AnimImageEntity extends ImageEntity {
         this.anim = anim;
     }
 
-    public AnimImageEntity(Handler handler, Animation anim, float s, float x, float y, float cx, float cy) {
-        super(handler, anim.getCurrentFrame(), s, x, y, cx, cy);
-        this.anim = anim;
-    }
 
     public void tick() {
         anim.tick();

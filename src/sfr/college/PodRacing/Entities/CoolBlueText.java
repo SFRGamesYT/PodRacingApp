@@ -20,6 +20,7 @@ public class CoolBlueText extends Entity {
     private final Color blue2;
     private Font font;
     private String text;
+    private float x,y;
 
     public CoolBlueText(Handler handler, String text, float x, float y) {
         this.handler = handler;

@@ -7,27 +7,26 @@ package sfr.college.PodRacing.Entities;
 
 import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Handler;
-import sfr.college.PodRacing.util.MathUtils;
+import sfr.college.PodRacing.util.Vector2D;
 
 import java.awt.*;
-
-import static sfr.college.PodRacing.Game.scaleToWindow;
 
 /**
  * @author SFRGa
  */
 public class Title extends ImageEntity {
-    float yMove = 1;
-
     boolean animated;
-    float velocity;
 
-    public Title(Handler handler, float s, float x, float y, Boolean anim) {
+
+    public Title(Handler handler, double s, double x, double y, Boolean anim) {
         super(handler, Assets.titleText1, s, x, y);
         this.animated = anim;
-        velocity = 0;
-
+        if(animated){
+            boundsOnScreen.setAcceleration(new Vector2D(0,0));
+        }
     }
+
+
 
     @Override
     public void render(Graphics g) {
@@ -37,32 +36,25 @@ public class Title extends ImageEntity {
     @Override
     public void tick() {
         super.tick();
-
-
-        if (animated) {
-            if (!isdone()) {
-                if (!handler.getKeyManager().keyPressed) {
-                    velocity = MathUtils.Approach(80, velocity, 20);
-                    yMove = velocity;
-                }
+        if(animated) {
+            if (00.12d * boundsOnScreen.getElapsedFrames() >= Math.PI * 2) {
+                boundsOnScreen.getVelocity().setZero();
+                boundsOnScreen.getAcceleration().setZero();
+                System.out.println(boundsOnScreen.getPos().x);
+            } else {
+                boundsOnScreen.getAcceleration().set(0, Math.sin(00.12d * boundsOnScreen.getElapsedFrames()));
             }
-            if (this.isdone()) {
-                yMove = 0;
+            if(isdone()&&Assets.main.getClip().getMicrosecondPosition()<23900 * 1000L){
+                Assets.main.skip(23900);
             }
-            y2 += yMove;
         }
-
-
     }
 
     public boolean isdone() {
-        if (animated) return !(y2 <= scaleToWindow(0.3f));
+        if (animated) return (boundsOnScreen.getPos().y >= 195.8);
         return true;
     }
 
-    public void skipAnim() {
-        y2 = scaleToWindow(0.3f);
 
-    }
 
 }

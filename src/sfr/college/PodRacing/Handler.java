@@ -5,10 +5,9 @@
  */
 package sfr.college.PodRacing;
 
+import sfr.college.PodRacing.Entities.Vehicle;
 import sfr.college.PodRacing.States.GameState;
 import sfr.college.PodRacing.States.StateManager;
-
-import java.awt.*;
 
 /**
  * @author sr35477
@@ -57,6 +56,7 @@ public class Handler {
 	 * Returns the private variable game's value
 	 * @return the value of the private variable game
 	 */
+
     public Game getGame() {
         return game;
     }
@@ -105,9 +105,10 @@ public class Handler {
 	 * Returns the private variable collisionHull's value
 	 * @return the value of the private variable collisionHull
 	 */
-    public Rectangle getCollisionHull() {
-        return getGameState().getVehicleSelected().getCollisionHull();
-    }
+	public Vehicle getCurrentVehicle(){
+		return getGameState().getVehicleSelected();
+	}
+
 
 
 }

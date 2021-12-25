@@ -5,6 +5,8 @@
  */
 package sfr.college.PodRacing;
 
+import sfr.college.PodRacing.util.Vector2D;
+
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -15,14 +17,17 @@ import java.awt.event.MouseMotionListener;
 public class MouseManager implements MouseListener, MouseMotionListener {
     public boolean leftPressed, rightPressed;
     public int mX, mY; // location of mouse
+    public Vector2D mousePos;
 
     public MouseManager() {
+        mousePos = new Vector2D();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
+        mousePos.set(mX,mY);
     }
 
     @Override
@@ -31,10 +36,12 @@ public class MouseManager implements MouseListener, MouseMotionListener {
             leftPressed = true;
             mX = e.getX();
             mY = e.getY();
+            mousePos.set(mX,mY);
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             rightPressed = true;
             mX = e.getX();
             mY = e.getY();
+            mousePos.set(mX,mY);
         }
     }
 
@@ -44,10 +51,12 @@ public class MouseManager implements MouseListener, MouseMotionListener {
             leftPressed = false;
             mX = e.getX();
             mY = e.getY();
+            mousePos.set(mX,mY);
         } else if (e.getButton() == MouseEvent.BUTTON3) {
             rightPressed = false;
             mX = e.getX();
             mY = e.getY();
+            mousePos.set(mX,mY);
         }
     }
 
@@ -63,6 +72,7 @@ public class MouseManager implements MouseListener, MouseMotionListener {
     public void mouseDragged(MouseEvent e) {
         mX = e.getX();
         mY = e.getY();
+        mousePos.set(mX,mY);
     }
 
     @Override

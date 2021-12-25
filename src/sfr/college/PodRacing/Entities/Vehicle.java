@@ -4,11 +4,10 @@
  */
 package sfr.college.PodRacing.Entities;
 
-import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.Sound;
 import sfr.college.PodRacing.gfx.Animation;
-import sfr.college.PodRacing.util.MathUtils;
+import sfr.college.PodRacing.util.Vector2D;
 
 import java.awt.*;
 
@@ -18,139 +17,118 @@ import static sfr.college.PodRacing.Game.WIN_SIZE_HALF;
  * @author Sami
  */
 public class Vehicle extends AnimImageEntity {
-    public static final float startX = 0.0625f;
-    public static final float startY = 0.75f;
-    protected final double MAX_SPEED, STEER_SP, ACCELERATION;
-    protected double sp;
-    protected double direction;//in degrees
-    protected double tempDirection;
-    protected float camX, camY;
+    public static Vector2D start;
+    protected HitBox hitBox, hitBoxLarge;
+    protected final double MAX_SPEED, STEER_SP;
+    protected double angle;
+    protected double jerk;
+    protected Vector2D direction;//in degrees
+    protected Vector2D tempDirection;
     protected int engineDelta;
     protected Animation left, right, idle;
     protected Sound engineSound;
-    protected Rectangle hitBox;
-    protected Rectangle collisionHull;
-    protected boolean isColliding;
     private boolean drifting;
 
-    public Vehicle(Handler handler, Animation animation, float cx, float cy, double max, double steer, double acc, Sound sound) {
-        super(handler, animation, 0.25f, 0.5f, 0.8f, cx, cy);
-
-        camX = -Game.scaleToWindow(startX - 0.5f);
-        camY = -Game.scaleToWindow(startY - 0.5f);
-        MAX_SPEED = max;
-        STEER_SP = steer;
-        ACCELERATION = acc;
-        sp = 0;
-        direction = 0;
+    public Vehicle(Handler handler, Animation animation, float originX, float originY, double max_speed, double steer_speed, double jerk, Sound sound) {
+        super(handler, animation, 0.25f, 0.5f, 0.8f);
+        start = new Vector2D(0.0625f,0.75f);
+        hitBoxLarge = new HitBox(start.getMultiplied(256),boundsOnScreen.getSize().getMultiplied(0.025d),new Vector2D(originX,originY));
+        hitBox = new HitBox(hitBoxLarge.getPos().getAdded(hitBoxLarge.getSize().getMultiplied(hitBoxLarge.getOrigin())),new Vector2D (hitBoxLarge.getSize().x/2,hitBoxLarge.getSize().x/2));
+        MAX_SPEED = max_speed;
+        STEER_SP = steer_speed;
+        this.jerk = jerk;
+        angle = 0;
+        direction = new Vector2D();
+        direction.set(Math.sin(angle),-Math.cos(angle));
         idle = animation;
         engineSound = sound;
         engineDelta = 15;
-        hitBox = new Rectangle(x2, y2 + h2 - w2, w2, w2);
-        isColliding = false;
-
-
     }
 
     public void tick() {
+        super.tick();
 
+        hitBox.setVelocity(direction);
 
-        if (handler.getKeyManager().six) direction = 0;
-        if (sp > 0) {
+        hitBox.setVelocity(hitBox.getVelocity().getMultiplied(hitBox.getAcceleration()));
+
+        if (handler.getKeyManager().six) direction.set(0,1);
+        if (hitBox.getVelocity().getLength() > 0) {
             if (handler.getTime() % engineDelta == 0) {
                 engineSound.play();
             }
         }
         this.setAnim(idle);
-        if (sp >= MAX_SPEED) {
-            sp = MAX_SPEED;
-        }
+
         if (handler.getKeyManager().space) {
             if (!drifting) {
                 tempDirection = direction;
                 drifting = true;
             }
-            camY += (Math.cos(tempDirection)) * (sp);
-            camX += (Math.sin(tempDirection)) * (sp);
+           direction = tempDirection;
         } else {
             drifting = false;
-            camY += (Math.cos(direction)) * sp;
-            camX += (Math.sin(direction)) * sp;
+            direction.set(Math.sin(angle),-Math.cos(angle));
         }
 
-
-        if (handler.getFOV() >= 10)
+        //forward
+       // if (hitBoxLarge.getVelocity().getLength() < MAX_SPEED)
             if (handler.getKeyManager().up && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))) {
-                if (handler.getTime() % 3 == 0) {
-                    super.x2 += Math.pow(-1, handler.getTime()) * Game.scaleToWindow(0.003f);
-                }
+                //pod shake
+             //   if (handler.getTime() % 3 == 0) {
+              //      boundsOnScreen.getPos().x += Math.pow(-1, handler.getTime()) * Game.scaleToWindow(0.003f);
+              //  }
+                //speed up engine noise
                 if (handler.getTime() % 10 == 0) {
                     engineDelta--;
                 }
-                if (sp >= ACCELERATION) {
-                    sp += ACCELERATION;
-                } else {
-                    sp += MathUtils.approachLinear(ACCELERATION, sp, ACCELERATION / 10);
-                }
+                //accelerate
+
+                hitBox.getAcceleration().add(jerk, jerk);
+
             } else {
                 if (handler.getTime() % 10 == 0) {
                     engineDelta++;
                 }
-                super.x2 = WIN_SIZE_HALF - super.w2 / 2;
-                if (sp > 0) {
+                boundsOnScreen.getPos().x = WIN_SIZE_HALF;
+                if (hitBox.getVelocity().getLength() > 0&&hitBox.getAcceleration().x>0&&hitBox.getAcceleration().y>0) {
                     if (drifting) {
-                        sp -= ACCELERATION / 2;
+
+                        hitBox.getAcceleration().subtract(jerk/2,jerk/2);
                     } else {
-                        sp -= (ACCELERATION);
+
+                        hitBox.getAcceleration().subtract(jerk,jerk);
                     }
                 }
 
             }
         if (engineDelta < 3) engineDelta = 3;
         if (engineDelta > 15) engineDelta = 15;
-        if (sp < 0) sp = 0;
-        if (!handler.invertControls) {
+        if (jerk<0) jerk = 0;
+        if(hitBox.getAcceleration().x<0&&hitBox.getAcceleration().y<0)hitBox.getAcceleration().setZero();hitBoxLarge.getAcceleration().setZero();
+        if (handler.invertControls) {
             if (handler.getKeyManager().left) {
-                direction += STEER_SP;
+                angle += STEER_SP;
                 this.setAnim(left);
-                if (drifting) {
 
-                    tempDirection += STEER_SP / 20;
-                }
             }
             if (handler.getKeyManager().right) {
-                direction -= STEER_SP;
+                angle -= STEER_SP;
                 this.setAnim(right);
-                if (drifting) {
-
-                    tempDirection -= STEER_SP / 20;
-                }
             }
         } else {
             if (handler.getKeyManager().left) {
-                direction -= STEER_SP;
+                angle -= STEER_SP;;
                 this.setAnim(right);
-                if (drifting) {
-
-                    tempDirection -= STEER_SP / 20;
-                }
             }
             if (handler.getKeyManager().right) {
-                direction += STEER_SP;
+                angle += STEER_SP;
                 this.setAnim(left);
-                if (drifting) {
-
-                    tempDirection += STEER_SP / 20;
-                }
             }
         }
-        try {
-            collisionHull.setLocation(handler.getGameState().getMapX() - w2 / (2 * 10), handler.getGameState().getMapY() + h2 / (10));
-        } catch (NullPointerException e) {
-            collisionHull = new Rectangle(handler.getGameState().getMapX() - w2 / (2 * 10), handler.getGameState().getMapY() + h2 / (10), w2 / 10, w2 / 10);
-        }
 
-        super.tick();
+        hitBox.tick();
+
 
 
     }
@@ -159,28 +137,106 @@ public class Vehicle extends AnimImageEntity {
 
         super.render(g);
 
+
     }
 
-    public boolean isColliding(Rectangle rec) {
-        // collision detected!
-        return collisionHull.intersects(rec);
+    public static Vector2D getStart() {
+        return start;
     }
 
-    public float getCamX() {
-        return camX;
+    public static void setStart(Vector2D start) {
+        Vehicle.start = start;
     }
 
-    public float getCamY() {
-        return camY;
+
+    public HitBox getHitBoxLarge() {
+        return hitBoxLarge;
     }
 
-    public double getDirection() {
-        return direction;
+    public HitBox getHitBox() {
+        return hitBox;
     }
 
-    public Rectangle getCollisionHull() {
-        return collisionHull;
+    public void setHitBox(HitBox hitBox) {
+        this.hitBoxLarge = hitBox;
     }
+
+    public double getMAX_SPEED() {
+        return MAX_SPEED;
+    }
+
+    public double getSTEER_SP() {
+        return STEER_SP;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getJerk() {
+        return jerk;
+    }
+
+    public void setJerk(double jerk) {
+        this.jerk = jerk;
+    }
+
+    public Vector2D getDirection() {
+        direction.setName("direction");return direction.getMultiplied(new Vector2D(1,-1));
+    }
+
+    public void setDirection(Vector2D direction) {
+        this.direction = direction;
+    }
+
+    public Vector2D getTempDirection() {
+        return tempDirection;
+    }
+
+    public void setTempDirection(Vector2D tempDirection) {
+        this.tempDirection = tempDirection;
+    }
+
+    public int getEngineDelta() {
+        return engineDelta;
+    }
+
+    public void setEngineDelta(int engineDelta) {
+        this.engineDelta = engineDelta;
+    }
+
+    public Animation getLeft() {
+        return left;
+    }
+
+    public void setLeft(Animation left) {
+        this.left = left;
+    }
+
+    public Sound getEngineSound() {
+        return engineSound;
+    }
+
+    public void setEngineSound(Sound engineSound) {
+        this.engineSound = engineSound;
+    }
+
+    public boolean isDrifting() {
+        return drifting;
+    }
+
+    public void setDrifting(boolean drifting) {
+        this.drifting = drifting;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public HitBox getCollisionHull() {
+        return boundsOnScreen;
+    }
+
 
 
 }
