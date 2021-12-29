@@ -144,9 +144,9 @@ public class HitBox{
                 this.contactNormal = new Vector2D(0,-1);
             }
         }
-
-        if(t_hit_near>1)return false;
         this.t_hit_near = t_hit_near;
+        if(t_hit_near>1)return false;
+
         return true;
 
 
@@ -161,9 +161,10 @@ public class HitBox{
         }
         HitBox expandedTarget = new HitBox(target.posCentre,target.size.getAdded(this.size),new Vector2D(0.5f,0.5f),false);
         if(this.RayVsRect(this.velocity,expandedTarget)){
-            return true;
+            return (this.getT_hit_near()>=0.0f&&this.getT_hit_near()<1.0f);
+        }else {
+            return false;
         }
-        return false;
 
     }
 

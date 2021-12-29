@@ -7,7 +7,7 @@ public class MapCollisionHulls extends Entity {
     private final HitBox[] hitBoxes =
 
             {
-                    new HitBox(8, 5, 246, 6),
+                    new HitBox(4, 5, 246, 6),
                     new HitBox(26, 21, 228, 22),
                     new HitBox(48, 31, 204, 32),
                     new HitBox(72, 59, 183, 60),
@@ -29,7 +29,7 @@ public class MapCollisionHulls extends Entity {
                     new HitBox(93, 218, 245, 219),
                     new HitBox(26, 230, 48, 231),
                     new HitBox(8, 249, 69, 250),
-                    new HitBox(6, 7, 7, 248),
+                    new HitBox(7, 3, 8, 248),
                     new HitBox(26, 23, 27, 229),
                     new HitBox(46, 33, 47, 119),
                     new HitBox(47, 146, 48, 229),
