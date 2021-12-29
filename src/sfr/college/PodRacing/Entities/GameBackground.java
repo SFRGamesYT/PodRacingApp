@@ -11,6 +11,9 @@ import sfr.college.PodRacing.gfx.Animation;
 import sfr.college.PodRacing.util.Vector2D;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+
+import static sfr.college.PodRacing.Game.*;
 
 
 /**
@@ -36,14 +39,38 @@ public class GameBackground extends AnimImageEntity {
 
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D)g;
+        Vehicle v = handler.getCurrentVehicle();
+        AffineTransform OLDat = g2d.getTransform();
+
+        double width = WIN_SIZE;
+        double height =WIN_SIZE;
+
+        double zoomWidth = width * fov;
+        double zoomHeight = height * fov;
+
+        double anchorx = (width - zoomWidth) / 2;
+        double anchory = (height - zoomHeight) / 2;
+
+        AffineTransform at = g2d.getTransform();
+        at.rotate(Math.PI*2-v.getAngle(),v.getBoundsOnScreen().getPosCentre().x,v.getBoundsOnScreen().getPosCentre().y);
+        at.translate(anchorx, anchory);
+        at.scale(fov,fov);
+        at.translate(-v.getHitBox().getPosCentre().x+Game.scaleToWindow(0.5), -v.getHitBox().getPosCentre().y+Game.scaleToWindow(0.5));
+
+        g2d.setTransform(at);
+
         super.render(g2d);
-        g2d.setColor(Color.magenta);
-        mch.render(g2d);
-        g2d.setColor(Color.GREEN);
-        handler.getCurrentVehicle().hitBox.getVelocity().getNormalized().getMultiplied(Game.scaleToWindow(0.05)).renderFrom(handler.getCurrentVehicle().hitBox.getPosCentre(),g2d);
-        handler.getCurrentVehicle().getHitBox().draw(g2d);
-        g2d.setColor(Color.orange);
-        new HitBox(handler.getCurrentVehicle().getHitBox().getContactPoint(),this.handler.getCurrentVehicle().getHitBox().getSize().getDivided(4),new Vector2D(0.5f,0.5f),false).draw(g2d);
+        if(handler.devMode){
+            g2d.setColor(Color.magenta);
+            mch.render(g2d);
+        }
+        g2d.setTransform(OLDat);
+       //
+      //  g2d.setColor(Color.GREEN);
+       // handler.getCurrentVehicle().hitBox.getVelocity().getNormalized().getMultiplied(Game.scaleToWindow(0.05)).renderFrom(handler.getCurrentVehicle().hitBox.getPosCentre(),g2d);
+    //    handler.getCurrentVehicle().getHitBox().draw(g2d);
+     //   g2d.setColor(Color.orange);
+     //   new HitBox(handler.getCurrentVehicle().getHitBox().getContactPoint(),this.handler.getCurrentVehicle().getHitBox().getSize().getDivided(4),new Vector2D(0.5f,0.5f),false).draw(g2d);
 
 
 

@@ -18,7 +18,7 @@ import java.awt.*;
  * @author SR35477
  */
 public class GameState extends State {
-    private final float DEFAULT_FOV = 1;
+    private final float DEFAULT_FOV = 10;
     String podSelected;
     Button pauseButton;
     GameBackground bg;
@@ -58,7 +58,7 @@ public class GameState extends State {
             g.drawString("speed: "+ MathUtils.round(vehicleSelected.getHitBox().getVelocity().getLength(),2), Game.scaleToWindow(0.75),Game.scaleToWindow(0.3f));
             g.drawString("pos"+vehicleSelected.getHitBox().getPosCentre().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.4f));
             g.drawString("velocity"+vehicleSelected.getHitBox().getVelocity().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.2f));
-            g.drawString("ElapsedFrames: "+String.valueOf(vehicleSelected.getHitBox().getElapsedFrames()), Game.scaleToWindow(0.75),Game.scaleToWindow(0.9f));
+            g.drawString("ElapsedFrames: "+ vehicleSelected.getHitBox().getElapsedFrames(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.9f));
             g.drawString("direction"+vehicleSelected.getDirection().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.5f));
 
         }

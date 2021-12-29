@@ -62,7 +62,11 @@ public class Vehicle extends AnimImageEntity {
             hitBox.setVelocity(direction.getMultiplied(hitBox.getAcceleration()).getMultiplied(collisonResponse));
         }
         for(HitBox x: mch.getHitBoxes()) {
+            if(hitBox.DynamicRectVsRect(x)){
+                Vector2D collisionRes = hitBox.getContactNormal().getMultiplied(hitBox.getVelocity().getAbs()).getMultiplied(1 - hitBox.getT_hit_near());
+                hitBox.getVelocity().add(collisionRes);
 
+            }
 
 
         }
