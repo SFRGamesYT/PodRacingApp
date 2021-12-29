@@ -18,7 +18,7 @@ import java.awt.*;
  * @author SR35477
  */
 public class GameState extends State {
-    private final float DEFAULT_FOV = 10f;
+    private final float DEFAULT_FOV = 1;
     String podSelected;
     Button pauseButton;
     GameBackground bg;
@@ -39,7 +39,7 @@ public class GameState extends State {
         }
         pauseButton = new Button(handler, Assets.pauseButton, 0.05f, 0.97f, 0.03f, false);
         fov = DEFAULT_FOV;
-        bg = new GameBackground(handler, 1, 0.5f, 0.5f, fov);
+        bg = new GameBackground(handler, fov);
         miniMap = new MiniMap(handler);
 
 
@@ -54,7 +54,7 @@ public class GameState extends State {
         vehicleSelected.render(g);
         miniMap.render(g);
         g.setColor(Color.blue);
-        if (handler.devMode||true) {
+        if (handler.devMode) {
             g.drawString("speed: "+ MathUtils.round(vehicleSelected.getHitBox().getVelocity().getLength(),2), Game.scaleToWindow(0.75),Game.scaleToWindow(0.3f));
             g.drawString("pos"+vehicleSelected.getHitBox().getPosCentre().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.4f));
             g.drawString("velocity"+vehicleSelected.getHitBox().getVelocity().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.2f));

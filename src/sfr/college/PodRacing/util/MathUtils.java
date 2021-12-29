@@ -49,6 +49,9 @@ public class MathUtils {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+    public static int floor(double x){
+        return (int)Math.floor(x);
+    }
 
 
     public static boolean parseBoolean(String text) {

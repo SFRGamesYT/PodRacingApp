@@ -1,6 +1,8 @@
 package sfr.college.PodRacing.util;
 
 
+import java.awt.*;
+
 public class Vector2D {
 
     public double x;
@@ -23,6 +25,10 @@ public class Vector2D {
         set(v);
         name = "";
     }
+    public void renderFrom(Vector2D point, Graphics2D g){
+        Vector2D endPoint = point.getAdded(this);
+        g.drawLine(MathUtils.floor(point.x),MathUtils.floor(point.y),MathUtils.floor(endPoint.x),MathUtils.floor(endPoint.y));
+    }
 
     public void set(double x, double y) {
         this.x = x;
@@ -42,6 +48,7 @@ public class Vector2D {
         y = 0;
         name = "";
     }
+
 
     public double[] getComponents() {
         return new double[]{x, y};

@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class MapCollisionHulls extends Entity {
     //store data for each hit box
-    public static HitBox[] hitBoxes =
+    private final HitBox[] hitBoxes =
 
             {
                     new HitBox(8, 5, 246, 6),
@@ -45,15 +45,15 @@ public class MapCollisionHulls extends Entity {
                     new HitBox(247, 7, 248, 119),
                     new HitBox(223, 173, 224, 185),
                     new HitBox(246, 153, 247, 217)
-
-
             };
 
 
 
     @Override
     public void render(Graphics g) {
-
+        for(HitBox i:hitBoxes){
+            i.draw((Graphics2D) g);
+        }
     }
 
     @Override
@@ -61,5 +61,7 @@ public class MapCollisionHulls extends Entity {
 
     }
 
-
+    public HitBox[] getHitBoxes() {
+        return hitBoxes;
+    }
 }

@@ -26,6 +26,7 @@ public class StateManager {
     private AudioSettingsState audioSettings;
     private VideoSettingsState videoSettings;
     private GameSettingsState gameSettings;
+    private TestState test;
     private State currentState = null;
     private final Handler handler;
 
@@ -55,8 +56,13 @@ public class StateManager {
         if (forward && !back) {
             if (!currentState.equals(intro)) Assets.beep.play();
             if (currentState.equals(intro)) {
-                title = new TitleState(handler);
-                states.push(title);
+                if(intro.skip){
+                    test = new TestState(handler);
+                    states.push(test);
+                }else {
+                    title = new TitleState(handler);
+                    states.push(title);
+                }
             } else if (currentState.equals(title)) {
                 menu = new MenuState(handler);
                 states.push(menu);

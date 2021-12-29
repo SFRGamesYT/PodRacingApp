@@ -22,7 +22,7 @@ public class TitleState extends State {
     public TitleState(Handler handler) {
         super(handler);
         this.bg = new TitleBackground(handler, true);
-        this.title = new Title(handler,0.6d,0.5d,0d,true);
+        this.title = new Title(handler,1.5d,0.5d,0d,true);
         this.pressKey = new PressKeyPrompt(handler,0.4f,0.5f,0.7f);
 
     }

@@ -8,11 +8,9 @@ import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.gfx.Animation;
+import sfr.college.PodRacing.util.Vector2D;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-
-import static sfr.college.PodRacing.Game.WIN_SIZE;
 
 
 /**
@@ -21,67 +19,37 @@ import static sfr.college.PodRacing.Game.WIN_SIZE;
 public class GameBackground extends AnimImageEntity {
 
     protected float fov;
+    protected MapCollisionHulls mch;
 
 
-
-    public GameBackground(Handler handler, float s, float x, float y, float fov) {
-        super(handler, new Animation(300, Assets.bg), s, x, y);
+    public GameBackground(Handler handler, float fov) {
+        super(handler, new Animation(300, Assets.bg), 1, 0.5f, 0.5f);
         this.fov = fov;
+        mch = new MapCollisionHulls();
     }
 
     public void tick() {
-
         super.tick();
 
 
     }
 
     public void render(Graphics g) {
-        Vehicle v = handler.getCurrentVehicle();
-        Graphics2D g2d = (Graphics2D) g;
-        double width = WIN_SIZE;
-        double height = WIN_SIZE;
-
-        double zoomWidth = width * fov;
-        double zoomHeight = height * fov;
-
-        double anchorx = (width - zoomWidth) / 2;
-        double anchory = (height - zoomHeight) / 2;
-        AffineTransform OLDat = new AffineTransform();
-        AffineTransform at = new AffineTransform();
-        //at.rotate(2*Math.PI-v.getAngle(), WIN_SIZE_HALF,WIN_SIZE_HALF);
-        at.translate(anchorx, anchory);
-        at.scale(fov, fov);
-       // at.translate(-WIN_SIZE*(v.getHitBox().getPosCentre().x/256.0d)+WIN_SIZE_HALF, -WIN_SIZE*(v.getHitBox().getPosCentre().y/256.0d)+WIN_SIZE_HALF);
-
-        g2d.setTransform(at);
-
-
+        Graphics2D g2d = (Graphics2D)g;
         super.render(g2d);
-        if (handler.devMode) {
-            g.setColor(Color.MAGENTA);
-            int count = 0;
-            while (true) {
-                try {
-                    g.setColor(Color.MAGENTA);
-                    MapCollisionHulls.hitBoxes[count].getScaled().render(g);
+        g2d.setColor(Color.magenta);
+        mch.render(g2d);
+        g2d.setColor(Color.GREEN);
+        handler.getCurrentVehicle().hitBox.getVelocity().getNormalized().getMultiplied(Game.scaleToWindow(0.05)).renderFrom(handler.getCurrentVehicle().hitBox.getPosCentre(),g2d);
+        handler.getCurrentVehicle().getHitBox().draw(g2d);
+        g2d.setColor(Color.orange);
+        new HitBox(handler.getCurrentVehicle().getHitBox().getContactPoint(),this.handler.getCurrentVehicle().getHitBox().getSize().getDivided(4),new Vector2D(0.5f,0.5f),false).draw(g2d);
 
-                    if (v.getHitBox().RectVsRect(MapCollisionHulls.hitBoxes[count])){
-                        g.setColor(Color.red);
-                    } else {
-                        g.setColor(Color.yellow);
-                    }
 
-                    v.getHitBox().getScaled().render(g);
-                    g.drawLine((int)v.getHitBox().getScaled().getPosCentre().x,(int)v.getHitBox().getScaled().getPosCentre().y,(int)v.getHitBox().getScaled().getPosCentre().getAdded(v.getDirection().getMultiplied(Game.scaleToWindow(0.1f))).x,(int)v.getHitBox().getScaled().getPosCentre().getAdded(v.getDirection().getMultiplied(Game.scaleToWindow(0.1f)*-1)).y);
-                } catch (java.lang.ArrayIndexOutOfBoundsException e) {
-                    break;
-                }
-                count++;
 
-            }
-        }
-        g2d.setTransform(OLDat);
+
+
+
     }
 
     public float getFOV() {

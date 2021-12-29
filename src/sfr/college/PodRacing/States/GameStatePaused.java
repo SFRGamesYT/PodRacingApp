@@ -28,8 +28,8 @@ public class GameStatePaused extends StateExitable {
     public GameStatePaused(Handler handler, GameState game) {
         super(handler);
         this.game = game;
-        super.backButton = new Button(handler, Assets.backbutton, 0.35f, 0.5f, 0.4f, false);
-        quit = new Button(handler, Assets.quitbutton, 0.35f, 0.5f, 0.6f, false);
+        super.backButton = new Button(handler, Assets.backbutton, 0.35f, 0.5f, 0.3f, false);
+        quit = new Button(handler, Assets.quitbutton, 0.35f, 0.5f, 0.7f, false);
     }
 
     @Override

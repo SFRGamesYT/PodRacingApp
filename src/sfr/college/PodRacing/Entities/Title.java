@@ -6,10 +6,13 @@
 package sfr.college.PodRacing.Entities;
 
 import sfr.college.PodRacing.Assets;
+import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.util.Vector2D;
 
 import java.awt.*;
+
+import static sfr.college.PodRacing.Game.WIN_SIZE_HALF;
 
 /**
  * @author SFRGa
@@ -37,21 +40,22 @@ public class Title extends ImageEntity {
     public void tick() {
         super.tick();
         if(animated) {
-            if (00.12d * boundsOnScreen.getElapsedFrames() >= Math.PI * 2) {
+            if (0.16 * boundsOnScreen.getElapsedFrames() >= Math.PI * 2) {
                 boundsOnScreen.getVelocity().setZero();
                 boundsOnScreen.getAcceleration().setZero();
                 System.out.println(boundsOnScreen.getPos().x);
             } else {
-                boundsOnScreen.getAcceleration().set(0, Math.sin(00.12d * boundsOnScreen.getElapsedFrames()));
+                boundsOnScreen.getAcceleration().set(0, Math.sin(0.16 * boundsOnScreen.getElapsedFrames()));
             }
             if(isdone()&&Assets.main.getClip().getMicrosecondPosition()<23900 * 1000L){
                 Assets.main.skip(23900);
             }
+            if(boundsOnScreen.getSize().x> Game.scaleToWindow(0.9))boundsOnScreen.getSize().multiply(0.96f);
         }
     }
 
     public boolean isdone() {
-        if (animated) return (boundsOnScreen.getPos().y >= 195.8);
+        if (animated) return (0.35 * boundsOnScreen.getElapsedFrames() >= Math.PI * 2);
         return true;
     }
 

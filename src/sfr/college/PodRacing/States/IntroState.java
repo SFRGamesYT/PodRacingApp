@@ -21,6 +21,7 @@ public class IntroState extends State {
     private int alpha;
     private final ImageEntity sfrtext;
     private final ImageEntity yeartext;
+    public boolean skip;
 
     public IntroState(Handler handler) {
         super(handler);
@@ -47,6 +48,10 @@ public class IntroState extends State {
 
     @Override
     public void tick() {
+        if(handler.getKeyManager().nine){
+            skip = true;
+            forward = skip;
+        }
         if (handler.getTime() - now >= 90 && hideText == false) {
             showText = true;
         }

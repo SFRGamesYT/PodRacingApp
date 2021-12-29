@@ -27,7 +27,14 @@ public class ImageEntity extends Entity{
         this.img=img;
         imgSize = new Vector2D();
         imgSize.set(img.getWidth(null),img.getHeight(null));
-        boundsOnScreen = new HitBox(new Vector2D(Game.scaleToWindow(x),Game.scaleToWindow(y)),imgSize.getNormalized().getMultiplied(Math.sqrt(2*Game.scaleToWindow(s)*Game.scaleToWindow(s))));
+        boundsOnScreen = new HitBox(new Vector2D(Game.scaleToWindow(x),Game.scaleToWindow(y)),imgSize.getNormalized().getMultiplied(Math.sqrt(2*Game.scaleToWindow(s)*Game.scaleToWindow(s))),new Vector2D(0.5d,0.5d),false);
+    }
+    public ImageEntity(Handler handler, Image img, double s, double x, double y,double ox, double oy) {
+        this.handler = handler;
+        this.img=img;
+        imgSize = new Vector2D();
+        imgSize.set(img.getWidth(null),img.getHeight(null));
+        boundsOnScreen = new HitBox(new Vector2D(Game.scaleToWindow(x),Game.scaleToWindow(y)),imgSize.getNormalized().getMultiplied(Math.sqrt(2*Game.scaleToWindow(s)*Game.scaleToWindow(s))),new Vector2D(ox,oy),false);
     }
 
 
