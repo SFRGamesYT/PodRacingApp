@@ -61,9 +61,9 @@ public class Game implements Runnable {
         int height = (int) dimension.getHeight();
         alpha = width - height;
         if (signum(alpha) == 1) {
-            return (int) (height * 0.85f);
+            return (int) (height * 0.70f);
         } else {
-            return (int) (width * 0.85f);
+            return (int) (width * 0.70f);
         }
     }
 

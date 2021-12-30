@@ -55,7 +55,7 @@ public class GameBackground extends AnimImageEntity {
         at.rotate(Math.PI*2-v.getAngle(),v.getBoundsOnScreen().getPosCentre().x,v.getBoundsOnScreen().getPosCentre().y);
         at.translate(anchorx, anchory);
         at.scale(fov,fov);
-        at.translate(-v.getHitBox().getPosCentre().x+Game.scaleToWindow(0.5), -v.getHitBox().getPosCentre().y+Game.scaleToWindow(0.5));
+        at.translate(-v.getHitBox().getPosCentre().x+Game.scaleToWindow(0.5), -v.getHitBox().getPosCentre().y+Game.scaleToWindow(0.535));
 
         g2d.setTransform(at);
 
@@ -63,6 +63,8 @@ public class GameBackground extends AnimImageEntity {
         if(handler.devMode){
             g2d.setColor(Color.magenta);
             mch.render(g2d);
+            if(v.isColliding())g2d.setColor(Color.red);
+            handler.getCurrentVehicle().getHitBox().draw(g2d);
         }
         g2d.setTransform(OLDat);
        //
