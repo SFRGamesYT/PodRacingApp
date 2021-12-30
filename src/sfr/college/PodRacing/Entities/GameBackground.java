@@ -5,7 +5,6 @@
 package sfr.college.PodRacing.Entities;
 
 import sfr.college.PodRacing.Assets;
-import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.gfx.Animation;
 import sfr.college.PodRacing.util.Vector2D;
@@ -13,7 +12,8 @@ import sfr.college.PodRacing.util.Vector2D;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
-import static sfr.college.PodRacing.Game.*;
+import static sfr.college.PodRacing.Game.WIN_SIZE;
+import static sfr.college.PodRacing.Game.scaleToWindow;
 
 
 /**
@@ -55,7 +55,7 @@ public class GameBackground extends AnimImageEntity {
         at.rotate(Math.PI*2-v.getAngle(),v.getBoundsOnScreen().getPosCentre().x,v.getBoundsOnScreen().getPosCentre().y);
         at.translate(anchorx, anchory);
         at.scale(fov,fov);
-        at.translate(-v.getHitBox().getPosCentre().x+Game.scaleToWindow(0.5), -v.getHitBox().getPosCentre().y+Game.scaleToWindow(0.5));
+        at.translate(-v.getHitBox().getPosCentre().x+scaleToWindow(0.5), -v.getHitBox().getPosCentre().y+scaleToWindow(0.535));
 
         g2d.setTransform(at);
 
@@ -63,6 +63,10 @@ public class GameBackground extends AnimImageEntity {
         if(handler.devMode){
             g2d.setColor(Color.magenta);
             mch.render(g2d);
+            if(v.isColliding())g2d.setColor(Color.red);
+            handler.getCurrentVehicle().getHitBox().draw(g2d);
+            g2d.setColor(Color.orange);
+            new HitBox(handler.getCurrentVehicle().getHitBox().getContactPoint(),this.handler.getCurrentVehicle().getHitBox().getSize().getDivided(4),new Vector2D(0.5f,0.5f),false).draw(g2d);
         }
         g2d.setTransform(OLDat);
        //

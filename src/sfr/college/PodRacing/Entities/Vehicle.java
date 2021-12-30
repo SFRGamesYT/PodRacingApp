@@ -33,6 +33,8 @@ public class Vehicle extends AnimImageEntity {
     private boolean drifting;
     protected MapCollisionHulls mch;
     private boolean colliding;
+    private double friction;
+
 
 
     public Vehicle(Handler handler, Animation animation, float originX, float originY, double max_speed, double steer_speed, double jerk, Sound sound) {
@@ -48,24 +50,30 @@ public class Vehicle extends AnimImageEntity {
         idle = animation;
         engineSound = sound;
         engineDelta = 15;
-        collisonResponse = new Vector2D(1,1);
         mch = new MapCollisionHulls();
         colliding = false;
+        friction = 0;
 
     }
 
     public void tick() {
         super.tick();
+
         if(drifting){
-            hitBox.setVelocity(tempDirection.getMultiplied(hitBox.getAcceleration()).getMultiplied(collisonResponse));
+            hitBox.setVelocity(tempDirection.getMultiplied(hitBox.getAcceleration()));
         }else{
-            hitBox.setVelocity(direction.getMultiplied(hitBox.getAcceleration()).getMultiplied(collisonResponse));
+            hitBox.setVelocity(direction.getMultiplied(hitBox.getAcceleration()));
         }
+        byte count = 0;
         for(HitBox x: mch.getHitBoxes()) {
             if(hitBox.DynamicRectVsRect(x)){
+                colliding = true;
+                count++;
                 Vector2D collisionRes = hitBox.getContactNormal().getMultiplied(hitBox.getVelocity().getAbs()).getMultiplied(1 - hitBox.getT_hit_near());
                 hitBox.getVelocity().add(collisionRes);
 
+            }else if(count == 0){
+                colliding = false;
             }
 
 
@@ -96,7 +104,7 @@ public class Vehicle extends AnimImageEntity {
 
         //forward
         if (hitBox.getVelocity().getLength() <= MAX_SPEED&&(Math.abs(hitBox.getAcceleration().x)<=MAX_SPEED||Math.abs(hitBox.getAcceleration().y)<=MAX_SPEED)) {
-            if (handler.getKeyManager().up && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))) {
+            if (handler.getKeyManager().up && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))&&!colliding) {
                 //pod shake
                 if (handler.getTime() % 3 == 0) {
                     boundsOnScreen.getPos().x += Math.pow(-1, handler.getTime()) * Game.scaleToWindow(0.004f);
@@ -106,8 +114,11 @@ public class Vehicle extends AnimImageEntity {
                     engineDelta--;
                 }
                 //accelerate
+                if(colliding) {
 
-                hitBox.getAcceleration().add(jerk, jerk);
+                }else{
+                    hitBox.getAcceleration().add(jerk/2,jerk/2);
+                }
 
             } else {
                 if (handler.getTime() % 10 == 0) {

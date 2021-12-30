@@ -63,7 +63,7 @@ public class Game implements Runnable {
         if (signum(alpha) == 1) {
             return (int) (height * 0.85f);
         } else {
-            return (int) (width * 0.85f);
+            return (int) (width * 0.85);
         }
     }
 

@@ -26,7 +26,7 @@ public class MiniMap extends ImageEntity {
     @Override
     public void tick() {
         super.tick();
-        cursorPos.set(Vector2D.add(boundsOnScreen.getPos(),handler.getCurrentVehicle().getHitBox().getPos().getMultiplied(0.2)));
+        cursorPos.set(Vector2D.add(boundsOnScreen.getPos(),handler.getCurrentVehicle().getHitBox().getPosCentre().getMultiplied(0.2)));
     }
 
     public void render(Graphics g) {
@@ -39,7 +39,7 @@ public class MiniMap extends ImageEntity {
 
     public void drawPos(Graphics g) {
         g.setColor(Color.orange);
-        g.fillOval((int)cursorPos.x,(int)cursorPos.y, Game.scaleToWindow(0.01f), Game.scaleToWindow(0.01f));
+        g.fillOval((int)cursorPos.x-Game.scaleToWindow(0.005),(int)cursorPos.y-Game.scaleToWindow(0.005), Game.scaleToWindow(0.01f), Game.scaleToWindow(0.01f));
     }
 
 }

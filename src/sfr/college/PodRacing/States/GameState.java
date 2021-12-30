@@ -51,8 +51,8 @@ public class GameState extends State {
     public void render(Graphics g) {
         bg.render(g);
       //  pauseButton.render(g);
-        vehicleSelected.render(g);
-        miniMap.render(g);
+
+
         g.setColor(Color.blue);
         if (handler.devMode) {
             g.drawString("speed: "+ MathUtils.round(vehicleSelected.getHitBox().getVelocity().getLength(),2), Game.scaleToWindow(0.75),Game.scaleToWindow(0.3f));
@@ -61,6 +61,9 @@ public class GameState extends State {
             g.drawString("ElapsedFrames: "+ vehicleSelected.getHitBox().getElapsedFrames(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.9f));
             g.drawString("direction"+vehicleSelected.getDirection().toString(), Game.scaleToWindow(0.75),Game.scaleToWindow(0.5f));
 
+        }else{
+            miniMap.render(g);
+            vehicleSelected.render(g);
         }
 
     }
