@@ -50,7 +50,7 @@ public class GameState extends State {
     @Override
     public void render(Graphics g) {
         bg.render(g);
-      //  pauseButton.render(g);
+        pauseButton.render(g);
 
 
         g.setColor(Color.blue);
