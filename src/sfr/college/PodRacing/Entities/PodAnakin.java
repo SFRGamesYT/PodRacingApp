@@ -19,7 +19,7 @@ public class PodAnakin extends Vehicle {
     public static String label = "Anakin's Podracer";
 
     public PodAnakin(Handler handler) {
-        super(handler, new Animation(50, Assets.pod0), 0.5f, 0.85f, Game.WIN_SIZE*0.005f, 0.03d, Game.WIN_SIZE*0.00001f, Assets.engine1);
+        super(handler, new Animation(50, Assets.pod0), 0.5f, 0.5f, Game.WIN_SIZE*0.005f, 0.03d, Game.WIN_SIZE*0.00001f, Assets.engine1);
         left = new Animation(50, Assets.pod0left);
         right = new Animation(50, Assets.pod0right);
     }
