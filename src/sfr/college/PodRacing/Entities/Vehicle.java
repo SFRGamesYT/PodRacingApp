@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package sfr.college.PodRacing.Entities;
-
+import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Game;
 import sfr.college.PodRacing.Handler;
 import sfr.college.PodRacing.Sound;
@@ -19,7 +19,7 @@ import static sfr.college.PodRacing.Game.WIN_SIZE_HALF;
  * @author Sami
  */
 public class Vehicle extends AnimImageEntity {
-    public static Vector2D start;
+    public static Vector2D startPos;
     protected HitBox hitBox;
     protected final double MAX_SPEED, STEER_SP;
     protected double angle;
@@ -34,13 +34,19 @@ public class Vehicle extends AnimImageEntity {
     protected MapCollisionHulls mch;
     private boolean colliding;
     private double friction;
+    private HitBox finishLine;
+    private long timeTaken,now,lastFrameTime;
+    private byte lap;
+    private long startTime;
+    private boolean start;
+    private boolean hasControls;
 
 
 
     public Vehicle(Handler handler, Animation animation, float originX, float originY, double max_speed, double steer_speed, double jerk, Sound sound) {
-        super(handler, animation, 0.25f, 0.5f, 0.85f,originX,originY);
-        start = new Vector2D(0.0625f,0.75f);
-        hitBox = new HitBox(start.getMultiplied(WIN_SIZE),new Vector2D (Game.scaleToWindow(0.01f),Game.scaleToWindow(0.01f)),new Vector2D(0.5d,0.5d),true);
+        super(handler, animation, 0.25f, 0.5f, 0.7f,originX,originY);
+        startPos = new Vector2D(0.0625f,0.75f);
+        hitBox = new HitBox(startPos.getMultiplied(WIN_SIZE),new Vector2D (Game.scaleToWindow(0.025f),Game.scaleToWindow(0.025)),new Vector2D(0.5d,0.5d),true);
         MAX_SPEED = max_speed;
         STEER_SP = steer_speed;
         this.jerk = jerk;
@@ -53,11 +59,22 @@ public class Vehicle extends AnimImageEntity {
         mch = new MapCollisionHulls();
         colliding = false;
         friction = 0;
+        finishLine  = new HitBox(7,185,27,187);
+        lap = 0;
+        start = false;
+
+        timeTaken = 0;
+        hasControls = false;
+        startTime = System.currentTimeMillis();
 
     }
 
     public void tick() {
+        now = System.currentTimeMillis();
+        if(System.currentTimeMillis()-startTime>1000)hasControls = true;
         super.tick();
+
+        if(start)timeTaken+=now-lastFrameTime;
 
         if(drifting){
             hitBox.setVelocity(tempDirection.getMultiplied(hitBox.getAcceleration()));
@@ -78,20 +95,28 @@ public class Vehicle extends AnimImageEntity {
 
 
         }
+        if(hitBox.DynamicRectVsRect(finishLine)&&hitBox.getContactNormal().equals(new Vector2D(0,1))){
+            if(lap == 0)start = true;
+            lap++;
+            Assets.beep.play();
+        }else if(hitBox.DynamicRectVsRect(finishLine)&&hitBox.getContactNormal().equals(new Vector2D(0,-1))){
+            Vector2D collisionRes = hitBox.getContactNormal().getMultiplied(hitBox.getVelocity().getAbs()).getMultiplied(1 - hitBox.getT_hit_near());
+            hitBox.getVelocity().add(collisionRes);
+        }
 
 
 
 
 
-        if (handler.getKeyManager().six) direction.set(0,1);
+
         if (hitBox.getVelocity().getLength() > 0) {
             if (handler.getTime() % engineDelta == 0) {
                 engineSound.play();
             }
         }
         this.setAnim(idle);
-
-        if (handler.getKeyManager().space) {
+//
+        if (handler.getKeyManager().space&&hasControls) {
             if (!drifting) {
                 tempDirection = direction;
                 drifting = true;
@@ -104,7 +129,7 @@ public class Vehicle extends AnimImageEntity {
 
         //forward
         if (hitBox.getVelocity().getLength() <= MAX_SPEED&&(Math.abs(hitBox.getAcceleration().x)<=MAX_SPEED||Math.abs(hitBox.getAcceleration().y)<=MAX_SPEED)) {
-            if (handler.getKeyManager().up && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))&&!colliding) {
+            if (handler.getKeyManager().up && hasControls && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))&&!colliding) {
                 //pod shake
                 if (handler.getTime() % 3 == 0) {
                     boundsOnScreen.getPos().x += Math.pow(-1, handler.getTime()) * Game.scaleToWindow(0.004f);
@@ -143,30 +168,34 @@ public class Vehicle extends AnimImageEntity {
         if (engineDelta < 3) engineDelta = 3;
         if (engineDelta > 15) engineDelta = 15;
         if(hitBox.getAcceleration().x<0&&hitBox.getAcceleration().y<0)hitBox.getAcceleration().setZero();
-        if (handler.invertControls) {
-            if (handler.getKeyManager().left) {
-                angle += STEER_SP;
-                this.setAnim(right);
+        if(hasControls) {
+            if (handler.invertControls) {
+                if (handler.getKeyManager().left) {
+                    angle += STEER_SP;
+                    this.setAnim(right);
 
-            }
-            if (handler.getKeyManager().right) {
-                angle -= STEER_SP;
-                this.setAnim(left);
-            }
-        } else {
-            if (handler.getKeyManager().left) {
-                angle -= STEER_SP;;
-                this.setAnim(left);
-            }
-            if (handler.getKeyManager().right) {
-                angle += STEER_SP;
-                this.setAnim(right);
+                }
+                if (handler.getKeyManager().right) {
+                    angle -= STEER_SP;
+                    this.setAnim(left);
+                }
+            } else {
+                if (handler.getKeyManager().left) {
+                    angle -= STEER_SP;
+                    ;
+                    this.setAnim(left);
+                }
+                if (handler.getKeyManager().right) {
+                    angle += STEER_SP;
+                    this.setAnim(right);
+                }
             }
         }
 
         hitBox.tick();
 
 
+        lastFrameTime = now;
 
     }
 
@@ -178,11 +207,11 @@ public class Vehicle extends AnimImageEntity {
     }
 
     public static Vector2D getStart() {
-        return start;
+        return startPos;
     }
 
     public static void setStart(Vector2D start) {
-        Vehicle.start = start;
+        Vehicle.startPos = start;
     }
 
 
@@ -223,58 +252,30 @@ public class Vehicle extends AnimImageEntity {
         direction.setName("direction");return direction.getMultiplied(new Vector2D(1,-1));
     }
 
-    public void setDirection(Vector2D direction) {
-        this.direction = direction;
-    }
 
-    public Vector2D getTempDirection() {
-        return tempDirection;
-    }
-
-    public void setTempDirection(Vector2D tempDirection) {
-        this.tempDirection = tempDirection;
-    }
-
-    public int getEngineDelta() {
-        return engineDelta;
-    }
-
-    public void setEngineDelta(int engineDelta) {
-        this.engineDelta = engineDelta;
-    }
-
-    public Animation getLeft() {
-        return left;
-    }
-
-    public void setLeft(Animation left) {
-        this.left = left;
-    }
-
-    public Sound getEngineSound() {
-        return engineSound;
-    }
-
-    public void setEngineSound(Sound engineSound) {
-        this.engineSound = engineSound;
-    }
-
-    public boolean isDrifting() {
-        return drifting;
-    }
-
-    public void setDrifting(boolean drifting) {
-        this.drifting = drifting;
-    }
 
     public double getAngle() {
         return angle;
     }
 
-    public HitBox getCollisionHull() {
-        return boundsOnScreen;
+
+
+    public long getTimeTaken() {
+        return timeTaken;
     }
 
 
 
+    public byte getLap() {
+        return lap;
+    }
+
+
+    public boolean isHasControls() {
+        return hasControls;
+    }
+
+    public void setHasControls(boolean hasControls) {
+        this.hasControls = hasControls;
+    }
 }

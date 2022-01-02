@@ -55,13 +55,9 @@ public class StateManager {
         if (forward && !back) {
             if (!currentState.equals(intro)) Assets.beep.play();
             if (currentState.equals(intro)) {
-                if(intro.skip){
-                    game = new GameState(handler,"Anakin's Podracer");
-                    states.push(game);
-                }else {
                     title = new TitleState(handler);
                     states.push(title);
-                }
+
             } else if (currentState.equals(title)) {
                 menu = new MenuState(handler);
                 states.push(menu);
@@ -81,7 +77,7 @@ public class StateManager {
                         break;
                 }
             } else if (currentState.equals(choosePod)) {
-                game = new GameState(handler, choosePod.getPodSelected());
+                game = new GameState(handler, choosePod.getPodSelected(),12);
                 states.push(game);
             } else if (currentState.equals(game)) {
                 gamePause = new GameStatePaused(handler, game);
@@ -90,6 +86,7 @@ public class StateManager {
             } else if (currentState.equals(gamePause)) {
                 menu = new MenuState(handler);
                 states.clear();
+                Assets.init(handler);
                 states.push(menu);
 
             } else if (currentState.equals(settings)) {
@@ -118,6 +115,110 @@ public class StateManager {
                 states.pop();
             }
         }
+    }
+
+    public Stack<State> getStates() {
+        return states;
+    }
+
+    public IntroState getIntro() {
+        return intro;
+    }
+
+    public TitleState getTitle() {
+        return title;
+    }
+
+    public void setTitle(TitleState title) {
+        this.title = title;
+    }
+
+    public MenuState getMenu() {
+        return menu;
+    }
+
+    public void setMenu(MenuState menu) {
+        this.menu = menu;
+    }
+
+    public ChooseState getChoosePod() {
+        return choosePod;
+    }
+
+    public void setChoosePod(ChooseState choosePod) {
+        this.choosePod = choosePod;
+    }
+
+    public SettingsState getSettings() {
+        return settings;
+    }
+
+    public void setSettings(SettingsState settings) {
+        this.settings = settings;
+    }
+
+    public ExitState getExit() {
+        return exit;
+    }
+
+    public void setExit(ExitState exit) {
+        this.exit = exit;
+    }
+
+    public void setGame(GameState game) {
+        this.game = game;
+    }
+
+    public GameStatePaused getGamePause() {
+        return gamePause;
+    }
+
+    public void setGamePause(GameStatePaused gamePause) {
+        this.gamePause = gamePause;
+    }
+
+    public AudioSettingsState getAudioSettings() {
+        return audioSettings;
+    }
+
+    public void setAudioSettings(AudioSettingsState audioSettings) {
+        this.audioSettings = audioSettings;
+    }
+
+    public VideoSettingsState getVideoSettings() {
+        return videoSettings;
+    }
+
+    public void setVideoSettings(VideoSettingsState videoSettings) {
+        this.videoSettings = videoSettings;
+    }
+
+    public GameSettingsState getGameSettings() {
+        return gameSettings;
+    }
+
+    public void setGameSettings(GameSettingsState gameSettings) {
+        this.gameSettings = gameSettings;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public Handler getHandler() {
+        return handler;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public GameState getGame() {

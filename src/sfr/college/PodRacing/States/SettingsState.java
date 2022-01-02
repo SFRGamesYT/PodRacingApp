@@ -22,12 +22,12 @@ public class SettingsState extends StateExitable {
     private final int settingsChoice;
     private int count = 0;
     private final TitleBackground background;
-    private final CoolBlueText text;
-    private final CoolBlueText musicLbl;
-    private final CoolBlueText soundLbl;
-    private final CoolBlueText muteMusicLbl;
-    private final CoolBlueText muteSoundLbl;
-    private final CoolBlueText invertLbl;
+    private final GameText text;
+    private final GameText musicLbl;
+    private final GameText soundLbl;
+    private final GameText muteMusicLbl;
+    private final GameText muteSoundLbl;
+    private final GameText invertLbl;
     private float musicVolume, soundVolume;
     private boolean muteMusic, muteSound, invertControls;
     private final CheckBox musicBox;
@@ -39,14 +39,15 @@ public class SettingsState extends StateExitable {
 
     public SettingsState(Handler handler) {
         super(handler);
+        Assets.init(handler);
         background = new TitleBackground(handler, false);
         settingsChoice = -1;
-        text = new CoolBlueText(handler, "SETTINGS", 0.25f, 0.1f);
-        soundLbl = new CoolBlueText(handler, "Sound Effects Volume:", 0.1f, 0.25f);
-        musicLbl = new CoolBlueText(handler, "Music Volume:", 0.1f, 0.4f);
-        muteSoundLbl = new CoolBlueText(handler, "Mute Sound Effects:", 0.1f, 0.55f);
-        muteMusicLbl = new CoolBlueText(handler, "Mute Music:", 0.1f, 0.60f);
-        invertLbl = new CoolBlueText(handler, "Invert Controls:", 0.1f, 0.65f);
+        text = new GameText(handler, "SETTINGS", 0.25f, 0.1f);
+        soundLbl = new GameText(handler, "Sound Effects Volume:", 0.1f, 0.25f);
+        musicLbl = new GameText(handler, "Music Volume:", 0.1f, 0.4f);
+        muteSoundLbl = new GameText(handler, "Mute Sound Effects:", 0.1f, 0.55f);
+        muteMusicLbl = new GameText(handler, "Mute Music:", 0.1f, 0.60f);
+        invertLbl = new GameText(handler, "Invert Controls:", 0.1f, 0.65f);
         text.setSize(0.1f);
         muteSoundLbl.setSize(0.03f);
         muteMusicLbl.setSize(0.03f);

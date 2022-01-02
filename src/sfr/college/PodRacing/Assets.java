@@ -18,7 +18,7 @@ public class Assets {
     //static instances for each asset used
     public static Preferences settings;
     public static Image titleBg, titleText1, icon,
-            choosevehicletext, sfrtext, yeartext, gogtitle, minimap, bigrock;
+            choosevehicletext, sfrtext, yeartext, gogtitle, minimap, bigrock,scores;
     public static Image[] pressKey, pod0, pod1, pod2, playbutton,
             quitbutton, settingsbutton, backbutton, pod1button,
             pod0button, pod2button, pauseButton, applyButton, bg, pod0left, pod0right,
@@ -77,6 +77,7 @@ public class Assets {
         gogtitle = ResourceManager.getImage("gogtitle.png");
         minimap = ResourceManager.getImage("minimap.png");
         bigrock = ResourceManager.getImage("rock.png");
+        scores = ResourceManager.getImage("scores.png");
 
 
         pressKey = ResourceManager.getFrames((BufferedImage) ResourceManager.getImage("presskeyanim.png"), 2);

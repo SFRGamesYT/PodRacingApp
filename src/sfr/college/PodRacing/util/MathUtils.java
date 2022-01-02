@@ -7,7 +7,7 @@ package sfr.college.PodRacing.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
+import java.util.concurrent.TimeUnit;
 /**
  * @author sr35477
  */
@@ -57,6 +57,21 @@ public class MathUtils {
     public static boolean parseBoolean(String text) {
         return Boolean.parseBoolean(text);
 
+    }
+    public static String convertMillis(long milliseconds){
+        long minutes
+                = TimeUnit.MILLISECONDS.toMinutes(milliseconds);
+
+        // This method uses this formula seconds =
+        // (milliseconds / 1000);
+        long seconds
+                = (TimeUnit.MILLISECONDS.toSeconds(milliseconds)
+                % 60);
+        long ms = milliseconds - TimeUnit.SECONDS.toMillis(seconds) - TimeUnit.MINUTES.toMillis(minutes);
+        ms/=10;
+
+        // Print the answer
+        return (minutes + ":"+ seconds + ":"+ms);
     }
 
     public static float sqrt(float x) {

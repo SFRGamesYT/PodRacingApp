@@ -29,6 +29,7 @@ public class MenuState extends State {
 
     public MenuState(Handler handler) {
         super(handler);
+
         menuChoice = "";
         title = new Title(handler, 0.6f, 0.5f, 0.1f, false);
         play = new Button(handler, Assets.playbutton, 0.3f, 0.5f, 0.3f, false);

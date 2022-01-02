@@ -27,6 +27,7 @@ public class Game implements Runnable {
     public static final int WIN_SIZE_HALF = WIN_SIZE / 2;
     public static final int WIN_SIZE_QUARTER = WIN_SIZE_HALF / 2;
     public static final int WIN_SIZE_8TH = WIN_SIZE_QUARTER / 2;
+    public static final float PREFERRED_SIZE = 0.9f;
     private final Screen screen;
     private final KeyManager km;
     private final MouseManager mm;
@@ -35,7 +36,8 @@ public class Game implements Runnable {
     boolean running = false;
     private Thread thread;
     private Handler handler;
-    private int time; //starts at 0, increments each frame
+    private int time; //starts at 0, increments each
+
 
 	/**Game
 	 * Class to handler main game loop
@@ -61,9 +63,9 @@ public class Game implements Runnable {
         int height = (int) dimension.getHeight();
         alpha = width - height;
         if (signum(alpha) == 1) {
-            return (int) (height * 0.85f);
+            return (int) (height * PREFERRED_SIZE);
         } else {
-            return (int) (width * 0.85);
+            return (int) (width * PREFERRED_SIZE);
         }
     }
 
@@ -85,7 +87,7 @@ public class Game implements Runnable {
         handler.hasSound = hasSound;
         Assets.init(handler);
         screen.getFrame().setIconImage(Assets.icon);
-        screen.getFrame().getContentPane().setBackground(SAND);
+        screen.getFrame().getContentPane().setBackground(Color.BLACK);
         screen.getFrame().addKeyListener(km);
         screen.getCanvas().addKeyListener(km);
         screen.getFrame().addMouseListener(mm);

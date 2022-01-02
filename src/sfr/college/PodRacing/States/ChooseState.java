@@ -9,7 +9,7 @@ package sfr.college.PodRacing.States;
 import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Entities.Button;
 import sfr.college.PodRacing.Entities.ChoosePodButton;
-import sfr.college.PodRacing.Entities.CoolBlueText;
+import sfr.college.PodRacing.Entities.GameText;
 import sfr.college.PodRacing.Entities.TitleBackground;
 import sfr.college.PodRacing.Handler;
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class ChooseState extends StateExitable {
 
     private final TitleBackground background;
-    private final CoolBlueText chooseVehicleText;
+    private final GameText chooseVehicleText;
     private final ChoosePodButton pod0;
     private final ChoosePodButton pod1;
     private final ChoosePodButton pod2;
@@ -30,16 +30,17 @@ public class ChooseState extends StateExitable {
     private final Button playButton;
     private final ArrayList<ChoosePodButton> podButtons;
     private String podSelected;
-    private final CoolBlueText text;
+    private final GameText text;
     private final int now;
     private boolean play;
 
     public ChooseState(Handler handler) {
         super(handler);
+        Assets.init(handler);
         forward = false;
         play = false;
         background = new TitleBackground(handler, false);
-        chooseVehicleText = new CoolBlueText(handler, "CHOOSE VEHICLE", 0.05f, 0.1f);
+        chooseVehicleText = new GameText(handler, "CHOOSE VEHICLE", 0.05f, 0.1f);
 
 
         pod0 = new ChoosePodButton(handler, Assets.pod0button, 0.20f, 0.2f, 0.4f, "Anakin's Podracer");
@@ -56,7 +57,7 @@ public class ChooseState extends StateExitable {
         podButtons.add(pod1);
         podButtons.add(pod2);
 
-        text = new CoolBlueText(handler, "", 0.025f, 0.82f);
+        text = new GameText(handler, "", 0.025f, 0.82f);
         now = handler.getTime();
 
     }
