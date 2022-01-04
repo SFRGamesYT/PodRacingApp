@@ -1,6 +1,5 @@
 package sfr.college.PodRacing.States;
 
-
 import sfr.college.PodRacing.Entities.PressKeyPrompt;
 import sfr.college.PodRacing.Entities.Title;
 import sfr.college.PodRacing.Entities.TitleBackground;
@@ -8,17 +7,17 @@ import sfr.college.PodRacing.Handler;
 
 import java.awt.*;
 
-
-/**
- * @author Sami
- */
+//the image of the racetrack is faded in from black, then the game's title is shown.
+//then the user is prompted to press any key to continue
 public class TitleState extends State {
+    //object that contains image of racetrack for the background.
     private final TitleBackground bg;
-    int count = 0;
+    //object that contains image of title.
     private  Title title;
+    //object that contains image of the prompt to press any key to start.
     private  PressKeyPrompt pressKey;
 
-
+    //constructor
     public TitleState(Handler handler) {
         super(handler);
         this.bg = new TitleBackground(handler, true);
@@ -27,13 +26,16 @@ public class TitleState extends State {
 
     }
 
+    //inherited render method
     @Override
     public void render(Graphics g) {
+        //render background.
         bg.render(g);
+        //if background has finished fading in, render the title.
         if (bg.isDone()) {
             title.render(g);
         }
-
+        //if title has finished its animation, render the press key prompt.
         if (title.isdone()) {
             pressKey.render(g);
             if (handler.getKeyManager().keyPressed) {
@@ -42,10 +44,7 @@ public class TitleState extends State {
         }
     }
 
-
-
-
-
+    //inherited tick method
     @Override
     public void tick() {
         bg.tick();

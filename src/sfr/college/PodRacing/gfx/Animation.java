@@ -40,4 +40,7 @@ public class Animation {
     public Image getCurrentFrame() {
         return frames[index];
     }
+    public Image getFirstFrame() {
+        return frames[0];
+    }
 }

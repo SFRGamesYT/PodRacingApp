@@ -2,7 +2,7 @@ package sfr.college.PodRacing.util;
 
 
 import java.awt.*;
-
+//Objective 7.1
 public class Vector2D {
 
     public double x;

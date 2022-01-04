@@ -23,9 +23,6 @@ public class StateManager {
     private ExitState exit;
     private GameState game;
     private GameStatePaused gamePause;
-    private AudioSettingsState audioSettings;
-    private VideoSettingsState videoSettings;
-    private GameSettingsState gameSettings;
     private State currentState = null;
     private final Handler handler;
 
@@ -90,20 +87,7 @@ public class StateManager {
                 states.push(menu);
 
             } else if (currentState.equals(settings)) {
-                switch (settings.getSettingsChoice()) {
-                    case 1:
-                        videoSettings = new VideoSettingsState(handler);
-                        states.push(videoSettings);
-                        break;
-                    case 2:
-                        audioSettings = new AudioSettingsState(handler);
-                        states.push(audioSettings);
-                        break;
-                    case 3:
-                        gameSettings = new GameSettingsState(handler);
-                        states.push(gameSettings);
-                        break;
-                }
+
             }
         } else {
             if (currentState.equals(gamePause) && count < 5) {
@@ -177,29 +161,6 @@ public class StateManager {
         this.gamePause = gamePause;
     }
 
-    public AudioSettingsState getAudioSettings() {
-        return audioSettings;
-    }
-
-    public void setAudioSettings(AudioSettingsState audioSettings) {
-        this.audioSettings = audioSettings;
-    }
-
-    public VideoSettingsState getVideoSettings() {
-        return videoSettings;
-    }
-
-    public void setVideoSettings(VideoSettingsState videoSettings) {
-        this.videoSettings = videoSettings;
-    }
-
-    public GameSettingsState getGameSettings() {
-        return gameSettings;
-    }
-
-    public void setGameSettings(GameSettingsState gameSettings) {
-        this.gameSettings = gameSettings;
-    }
 
     public State getCurrentState() {
         return currentState;

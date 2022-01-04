@@ -15,10 +15,10 @@ import java.awt.*;
 import static sfr.college.PodRacing.Game.WIN_SIZE;
 import static sfr.college.PodRacing.Game.WIN_SIZE_HALF;
 
-/**
- * @author Sami
- */
+//Objective 7
+//Vehicle class
 public class Vehicle extends AnimImageEntity {
+    //where the vehicle spawns
     public static Vector2D startPos;
     protected HitBox hitBox;
     protected final double MAX_SPEED, STEER_SP;
@@ -82,6 +82,7 @@ public class Vehicle extends AnimImageEntity {
             hitBox.setVelocity(direction.getMultiplied(hitBox.getAcceleration()));
         }
         byte count = 0;
+        //objective 7.2
         for(HitBox x: mch.getHitBoxes()) {
             if(hitBox.DynamicRectVsRect(x)){
                 colliding = true;
@@ -104,11 +105,6 @@ public class Vehicle extends AnimImageEntity {
             hitBox.getVelocity().add(collisionRes);
         }
 
-
-
-
-
-
         if (hitBox.getVelocity().getLength() > 0) {
             if (handler.getTime() % engineDelta == 0) {
                 engineSound.play();
@@ -127,7 +123,7 @@ public class Vehicle extends AnimImageEntity {
             direction.set(Math.sin(angle),-Math.cos(angle));
         }
 
-        //forward
+        //objective 7.3
         if (hitBox.getVelocity().getLength() <= MAX_SPEED&&(Math.abs(hitBox.getAcceleration().x)<=MAX_SPEED||Math.abs(hitBox.getAcceleration().y)<=MAX_SPEED)) {
             if (handler.getKeyManager().up && hasControls && !(drifting && (handler.getKeyManager().left || handler.getKeyManager().right))&&!colliding) {
                 //pod shake
@@ -270,6 +266,9 @@ public class Vehicle extends AnimImageEntity {
         return lap;
     }
 
+    public Animation getIdle() {
+        return idle;
+    }
 
     public boolean isHasControls() {
         return hasControls;

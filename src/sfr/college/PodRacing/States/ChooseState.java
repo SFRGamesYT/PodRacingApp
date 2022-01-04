@@ -36,7 +36,6 @@ public class ChooseState extends StateExitable {
 
     public ChooseState(Handler handler) {
         super(handler);
-        Assets.init(handler);
         forward = false;
         play = false;
         background = new TitleBackground(handler, false);

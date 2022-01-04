@@ -43,8 +43,6 @@ public class Assets {
         invertControls = settings.getBoolean("invertControls", false);
         h.setInvert(invertControls);
         main = new Sound("focus.wav", h);
-        main.setVolume(musicVolume);
-        if (muteMusic) main.mute();
         beep = new Sound("select.wav", h);
         beep1 = new Sound("beep.wav", h);
         beep2 = new Sound("beep2.wav", h);
@@ -67,6 +65,12 @@ public class Assets {
             fx.setVolume(soundVolume);
             if (muteSound) fx.mute();
         }
+        for(Sound m : music){
+            m.setVolume(musicVolume);
+            if(muteMusic)m.mute();
+        }
+
+
 
         titleBg = ResourceManager.getImage("pseudoracetrack.png");
         titleText1 = ResourceManager.getImage("podracingtext.png");

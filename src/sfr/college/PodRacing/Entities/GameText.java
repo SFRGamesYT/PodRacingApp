@@ -28,7 +28,6 @@ public class GameText extends Entity {
         this.y = y;
         this.text = text;
         font = Assets.pixel;
-        //setSize();
         blue0 = Game.BLUE0;
         blue1 = Game.BLUE1;
         blue2 = Game.BLUE2;

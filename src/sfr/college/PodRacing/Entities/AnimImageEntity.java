@@ -39,4 +39,7 @@ public class AnimImageEntity extends ImageEntity {
         this.anim = a;
     }
 
+    public Animation getAnim() {
+        return anim;
+    }
 }
