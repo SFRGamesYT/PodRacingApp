@@ -9,43 +9,38 @@ import sfr.college.PodRacing.Assets;
 import sfr.college.PodRacing.Entities.Button;
 import sfr.college.PodRacing.Entities.*;
 import sfr.college.PodRacing.Handler;
+import sfr.college.PodRacing.Sound;
 
 import java.awt.*;
 import java.util.prefs.BackingStoreException;
 
-//Objective 6
-//where the user can tweak and toggle different values and aspects of the game
-//every state that extends StateExitable will already have a back button to go to the previous state
+/**
+ * @author SR35477
+ */
 public class SettingsState extends StateExitable {
 
-    //counts how many frames have passed since the apply button has been pressed
+    private final int settingsChoice;
     private int count = 0;
-    //background object containing an image of the racetrack
     private final TitleBackground background;
-    //stores the custom game text for each label in the settings
     private final GameText text;
     private final GameText musicLbl;
     private final GameText soundLbl;
     private final GameText muteMusicLbl;
     private final GameText muteSoundLbl;
     private final GameText invertLbl;
-    //stores the new volume of the music/sounds
     private float musicVolume, soundVolume;
-    //check boxes to control different booleans
+    private boolean muteMusic, muteSound, invertControls;
     private final CheckBox musicBox;
     private final CheckBox fxBox;
     private final CheckBox invertBox;
-    //sliders to control different float values
     private final UISlider soundSlider;
     private final UISlider musicSlider;
-    //apply button: applies user changes, reloads assets
     private final Button applyButton;
 
-    //constructor
     public SettingsState(Handler handler) {
         super(handler);
         background = new TitleBackground(handler, false);
-
+        settingsChoice = -1;
         text = new GameText(handler, "SETTINGS", 0.25f, 0.1f);
         soundLbl = new GameText(handler, "Sound Effects Volume:", 0.1f, 0.25f);
         musicLbl = new GameText(handler, "Music Volume:", 0.1f, 0.4f);
@@ -69,8 +64,10 @@ public class SettingsState extends StateExitable {
         invertBox.setOn(Assets.settings.getBoolean("invertControls", false));
     }
 
+    public int getSettingsChoice() {
+        return settingsChoice;
+    }
 
-    //inherited render method
     @Override
     public void render(Graphics g) {
         background.render(g);
@@ -90,49 +87,103 @@ public class SettingsState extends StateExitable {
         invertBox.render(g);
     }
 
-    //inherited tick method
     @Override
     public void tick() {
+        if (settingsChoice != -1) forward = true;
         super.tick();
         background.tick();
-        //set background to be slightly darker so text is more visible
         background.setAlpha(180);
-        //update sliders, buttons and check boxes - 6.1
         soundSlider.tick();
         musicSlider.tick();
+        if (back == true) System.out.println("BACK " + back);
         applyButton.tick();
+        musicVolume = musicSlider.getPercentage();
+        soundVolume = soundSlider.getPercentage();
+        if (applyButton.getPressed()) {
+            count++;
+            if (count == 1) Assets.beep.play();
+            for (Sound music : Assets.music) {
+                music.setVolume(musicVolume);
+            }
+            Assets.settings.putFloat("musicVolume", musicVolume);
+            for (Sound fx : Assets.fx) {
+                fx.setVolume(soundVolume);
+            }
+            Assets.settings.putFloat("soundVolume", soundVolume);
+            try {
+                Assets.settings.flush();
+            } catch (BackingStoreException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            count = 0;
+        }
         fxBox.tick();
         musicBox.tick();
         invertBox.tick();
-        //if the apply button is pressed - 6.2
-        if (applyButton.getPressed()) {
-            //count how many frames has passed since apply button is pressed
-            count++;
-            //only on the first frame
-            if (count == 1) {
-                //play beep noise
-                Assets.beep.play();
-                //set new volumes relative to the sliders position - 6.3
-                musicVolume = musicSlider.getPercentage();
-                soundVolume = soundSlider.getPercentage();
-                //store new values in users ROM so saved changed are not lost - 6.4
-                Assets.settings.putFloat("musicVolume", musicVolume);
-                Assets.settings.putFloat("soundVolume", soundVolume);
-                Assets.settings.putBoolean("muteMusic", musicBox.isOn());
-                Assets.settings.putBoolean("muteSound", fxBox.isOn());
-                Assets.settings.putBoolean("invertControls", invertBox.isOn());
-                try {
-                    Assets.settings.flush();
-                } catch (BackingStoreException ex) {
-                    ex.printStackTrace();
-                }
-                //reload game assets with new settings
-                Assets.init(handler);
-            }
-        } else {
-            //if apply button is not pressed, reset count variable to 0
-            count = 0;
+        Assets.settings.putBoolean("muteMusic", musicBox.isOn());
+        Assets.settings.putBoolean("muteSound", fxBox.isOn());
+        Assets.settings.putBoolean("invertControls", invertBox.isOn());
+        try {
+            Assets.settings.flush();
+        } catch (BackingStoreException ex) {
+            ex.printStackTrace();
         }
+        if (musicBox.isOn()) {
+            Assets.main.mute();
+        } else {
+            Assets.main.setVolume(musicVolume);
+        }
+
+        for (Sound fx : Assets.fx) {
+            if (fxBox.isOn()) {
+                fx.mute();
+            } else {
+                fx.setVolume(soundVolume);
+            }
+        }
+        handler.setInvert(invertBox.isOn());
     }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(float musicVolume) {
+        this.musicVolume = musicVolume;
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = soundVolume;
+    }
+
+    public boolean isMuteMusic() {
+        return muteMusic;
+    }
+
+    public void setMuteMusic(boolean muteMusic) {
+        this.muteMusic = muteMusic;
+    }
+
+    public boolean isMuteSound() {
+        return muteSound;
+    }
+
+    public void setMuteSound(boolean muteSound) {
+        this.muteSound = muteSound;
+    }
+
+    public boolean isInvertControls() {
+        return invertControls;
+    }
+
+    public void setInvertControls(boolean invertControls) {
+        this.invertControls = invertControls;
+    }
+
 
 }

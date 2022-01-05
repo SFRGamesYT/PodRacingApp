@@ -32,7 +32,7 @@ public class Assets {
     }
 
     public static void init(Handler h) {
-        //specifing each file 
+        //specifing each file
         settings = Preferences.userRoot();
         float soundVolume, musicVolume;
         boolean muteMusic, muteSound, invertControls;
@@ -42,7 +42,9 @@ public class Assets {
         muteSound = settings.getBoolean("muteSound", false);
         invertControls = settings.getBoolean("invertControls", false);
         h.setInvert(invertControls);
-        main = new Sound("focus.wav", h);
+        main = new Sound("focus.wav", h,true);
+        main.setVolume(musicVolume);
+        if (muteMusic) main.mute();
         beep = new Sound("select.wav", h);
         beep1 = new Sound("beep.wav", h);
         beep2 = new Sound("beep2.wav", h);
@@ -65,12 +67,6 @@ public class Assets {
             fx.setVolume(soundVolume);
             if (muteSound) fx.mute();
         }
-        for(Sound m : music){
-            m.setVolume(musicVolume);
-            if(muteMusic)m.mute();
-        }
-
-
 
         titleBg = ResourceManager.getImage("pseudoracetrack.png");
         titleText1 = ResourceManager.getImage("podracingtext.png");

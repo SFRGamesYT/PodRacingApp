@@ -11,6 +11,7 @@ import java.net.URL;
 public class Sound {
 
 
+    private boolean loop;
     /**
      * Audio clip for this sound.
      */
@@ -45,6 +46,32 @@ public class Sound {
             e.printStackTrace();
         }
     }
+        loop = false;
+    }
+
+    public Sound(String fileName, Handler handler,boolean loop) {
+        // Get the audio from the file
+        this.handler = handler;
+        if (this.handler.hasSound) {
+            try {
+                // Convert the file path string to a URL
+                URL sound = getClass().getResource("wav/" + fileName);
+                System.out.println(sound);
+
+                // Get audio input stream from the file
+                assert sound != null;
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(sound);
+
+                // Get clip resource
+                clip = AudioSystem.getClip();
+
+                // Open clip from audio input stream
+                clip.open(audioInputStream);
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        if(loop)this.loop = loop;
 
     }
 
@@ -65,6 +92,7 @@ public class Sound {
 
             // Play clip
             clip.start();
+            if(this.loop)clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
     }
 
